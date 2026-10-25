@@ -61,11 +61,23 @@ MIN_USERS_H2 = 200
 # 새 나라에서 인기 목록을 만들 때 쓰는 초기 사용자 수
 N_EARLY_USERS = 50
 # 초기 사용자 뽑기 반복 횟수
-N_EARLY_REPEATS = 5
+N_EARLY_REPEATS = 10
 # WVS 거리가 가까운 나라 몇 개의 비중을 평균 낼지
 WVS_NEIGHBORS_K = 3
 # 무작위 나라 비교를 몇 번 반복할지
 N_RANDOM_REPEATS = 100
+
+# ---------- 협업 필터링 H3 (초안) ----------
+# ALS 설정 후보. 검증 사용자로 고른다
+CF_FACTORS_GRID = [64, 128]
+CF_REG_GRID = [0.01, 0.1]
+CF_ITERATIONS = 15
+
+# ---------- 통계 (초안) ----------
+# 나라 단위 부트스트랩 반복 횟수
+N_BOOTSTRAP = 10000
+# Wilcoxon 부호순위 검정 유의수준 (양측)
+ALPHA = 0.05
 
 # ---------- WVS (초안) ----------
 # 나라 거리에 쓰는 WVS 종합 지수 (Welzel). 결과를 보기 전에 고정한다

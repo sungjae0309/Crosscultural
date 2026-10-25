@@ -8,8 +8,8 @@ import pandas as pd
 
 from config import (
     EXCLUDED_ISO3,
+    MIN_ARTISTS_EVAL_USER,
     MIN_USERS_PER_COUNTRY,
-    N_SHOWN_ARTISTS,
     TABLES_DIR,
     WVS_CSV_PATH,
     WVS_INDEX_COLUMNS,
@@ -74,8 +74,8 @@ def main():
             ("아티스트 수 (정리 후)", plays["artist_id"].nunique()),
             ("사용자-아티스트 쌍 수 (정리 후)", len(plays)),
             (
-                f"아티스트가 {N_SHOWN_ARTISTS}개 이하라 평가에 못 쓰는 사용자",
-                int((users_with_iso["n_artists"] <= N_SHOWN_ARTISTS).sum()),
+                f"아티스트가 {MIN_ARTISTS_EVAL_USER}개 미만이라 평가에 못 쓰는 사용자",
+                int((users_with_iso["n_artists"] < MIN_ARTISTS_EVAL_USER).sum()),
             ),
         ],
         columns=["항목", "값"],

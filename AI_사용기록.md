@@ -21,3 +21,10 @@
 - `check_data.py`에 WVS-Last.fm 공통 나라 표 추가 및 재실행
 - 실제 거주지로 보기 어려운 국가값 4개 제외 규칙을 `config.py`에 추가하고 데이터 확인 표 재생성 (제외 결정은 팀)
 - 실험 설계 초안 `report/실험설계_초안.md` 작성, 관련 기준값 초안을 `config.py`에 추가, README의 WVS 항목 갱신 (확정은 팀 검토 후)
+
+## 실험 설계 외부 검토
+
+- 사용한 도구: ChatGPT (코드 편집기 확장 프로그램). 프로젝트 폴더와 강의 자료를 읽기만 하게 하고 설계 초안 검토를 맡김
+- Claude가 검토 의견을 과제 자료(`Midterm_CrossCulturalRecommendationSystems.pdf`, `Guideline.pdf`)와 데이터로 다시 확인한 뒤 설계 초안 2판에 반영. 반영 내역은 `report/실험설계_초안.md` 16절
+- MBID 없는 아티스트 중복 규모 측정 (전체 기록의 0.1%)
+- `check_data.py`의 평가 불가 사용자 기준을 설계 문서와 같은 10개로 수정
