@@ -1,0 +1,211 @@
+target,method,w,detail
+USA,P0_global,0.0,
+USA,P1_country,1.0,
+USA,P2_common,0.2,
+USA,P3_oracle,0.3,
+USA,P4_wvs,0.2,ITA:0.166 ARG:0.496 MEX:0.528
+DEU,P0_global,0.0,
+DEU,P1_country,1.0,
+DEU,P2_common,0.2,
+DEU,P3_oracle,0.1,
+DEU,P4_wvs,0.1,SVN:0.299 NLD:0.340 FRA:0.414
+GBR,P0_global,0.0,
+GBR,P1_country,1.0,
+GBR,P2_common,0.2,
+GBR,P3_oracle,0.2,
+GBR,P4_wvs,0.2,NZL:0.214 AUS:0.223 ESP:0.328
+POL,P0_global,0.0,
+POL,P1_country,1.0,
+POL,P2_common,0.2,
+POL,P3_oracle,0.1,
+POL,P4_wvs,0.2,COL:0.262 ZAF:0.325 MYS:0.420
+RUS,P0_global,0.0,
+RUS,P1_country,1.0,
+RUS,P2_common,0.2,
+RUS,P3_oracle,0.2,
+RUS,P4_wvs,0.2,THA:0.079 UKR:0.262 MDA:0.502
+BRA,P0_global,0.0,
+BRA,P1_country,1.0,
+BRA,P2_common,0.2,
+BRA,P3_oracle,0.2,
+BRA,P4_wvs,0.2,CHL:0.283 MEX:0.315 ARG:0.402
+SWE,P0_global,0.0,
+SWE,P1_country,1.0,
+SWE,P2_common,0.2,
+SWE,P3_oracle,0.2,
+SWE,P4_wvs,0.1,NOR:0.892 DEU:1.402 SVN:1.691
+ESP,P0_global,0.0,
+ESP,P1_country,1.0,
+ESP,P2_common,0.2,
+ESP,P3_oracle,0.2,
+ESP,P4_wvs,0.2,URY:0.077 NZL:0.224 GBR:0.327
+FIN,P0_global,0.0,
+FIN,P1_country,1.0,
+FIN,P2_common,0.2,
+FIN,P3_oracle,0.2,
+FIN,P4_wvs,0.2,CHE:0.341 GBR:0.410 NZL:0.460
+NLD,P0_global,0.0,
+NLD,P1_country,1.0,
+NLD,P2_common,0.2,
+NLD,P3_oracle,0.1,
+NLD,P4_wvs,0.1,SVN:0.328 DEU:0.337 FRA:0.368
+CAN,P0_global,0.0,
+CAN,P1_country,1.0,
+CAN,P2_common,0.2,
+CAN,P3_oracle,0.2,
+CAN,P4_wvs,0.2,AUS:0.582 USA:0.702 GBR:0.802
+FRA,P0_global,0.0,
+FRA,P1_country,1.0,
+FRA,P2_common,0.2,
+FRA,P3_oracle,0.2,
+FRA,P4_wvs,0.1,SVN:0.117 NLD:0.366 DEU:0.410
+ITA,P0_global,0.0,
+ITA,P1_country,1.0,
+ITA,P2_common,0.2,
+ITA,P3_oracle,0.2,
+ITA,P4_wvs,0.3,USA:0.166 MEX:0.466 ARG:0.494
+AUS,P0_global,0.0,
+AUS,P1_country,1.0,
+AUS,P2_common,0.2,
+AUS,P3_oracle,0.2,
+AUS,P4_wvs,0.2,GBR:0.223 NZL:0.437 FIN:0.476
+JPN,P0_global,0.0,
+JPN,P1_country,1.0,
+JPN,P2_common,0.2,
+JPN,P3_oracle,0.3,
+JPN,P4_wvs,0.1,HUN:0.303 FRA:0.521 SRB:0.553
+TUR,P0_global,0.0,
+TUR,P1_country,1.0,
+TUR,P2_common,0.2,
+TUR,P3_oracle,0.2,
+TUR,P4_wvs,0.3,GEO:0.616 IDN:0.623 IND:0.973
+NOR,P0_global,0.0,
+NOR,P1_country,1.0,
+NOR,P2_common,0.2,
+NOR,P3_oracle,0.2,
+NOR,P4_wvs,0.1,SWE:0.865 DEU:1.002 CHE:1.033
+MEX,P0_global,0.0,
+MEX,P1_country,1.0,
+MEX,P2_common,0.2,
+MEX,P3_oracle,0.3,
+MEX,P4_wvs,0.2,ARG:0.180 BRA:0.315 ITA:0.465
+UKR,P0_global,0.0,
+UKR,P1_country,1.0,
+UKR,P2_common,0.2,
+UKR,P3_oracle,0.1,
+UKR,P4_wvs,0.1,THA:0.183 RUS:0.263 MDA:0.321
+CHE,P0_global,0.0,
+CHE,P1_country,1.0,
+CHE,P2_common,0.2,
+CHE,P3_oracle,0.1,
+CHE,P4_wvs,0.2,FIN:0.344 NLD:0.557 NZL:0.725
+BGR,P0_global,0.0,
+BGR,P1_country,1.0,
+BGR,P2_common,0.2,
+BGR,P3_oracle,0.2,
+BGR,P4_wvs,0.3,PER:0.357 KOR:0.437 CHL:0.672
+CHL,P0_global,0.0,
+CHL,P1_country,1.0,
+CHL,P2_common,0.2,
+CHL,P3_oracle,0.2,
+CHL,P4_wvs,0.2,BRA:0.282 PER:0.315 ARG:0.498
+ARG,P0_global,0.0,
+ARG,P1_country,1.0,
+ARG,P2_common,0.2,
+ARG,P3_oracle,0.2,
+ARG,P4_wvs,0.2,MEX:0.180 BRA:0.401 ITA:0.490
+ROU,P0_global,0.0,
+ROU,P1_country,1.0,
+ROU,P2_common,0.2,
+ROU,P3_oracle,0.2,
+ROU,P4_wvs,0.2,MYS:0.233 IND:0.295 ZAF:0.307
+HUN,P0_global,0.0,
+HUN,P1_country,1.0,
+HUN,P2_common,0.2,
+HUN,P3_oracle,0.1,
+HUN,P4_wvs,0.3,SRB:0.252 JPN:0.302 KOR:0.618
+COL,P0_global,0.0,
+COL,P1_country,1.0,
+COL,P2_common,0.2,
+COL,P3_oracle,0.2,
+COL,P4_wvs,0.2,MYS:0.231 POL:0.262 ROU:0.390
+SRB,P0_global,0.0,
+SRB,P1_country,1.0,
+SRB,P2_common,0.2,
+SRB,P3_oracle,0.1,
+SRB,P4_wvs,0.2,HUN:0.252 HKG:0.420 KOR:0.436
+CHN,P0_global,0.0,
+CHN,P1_country,1.0,
+CHN,P2_common,0.2,
+CHN,P3_oracle,0.3,
+CHN,P4_wvs,0.2,RUS:0.652 CHL:0.718 THA:0.726
+NZL,P0_global,0.0,
+NZL,P1_country,1.0,
+NZL,P2_common,0.2,
+NZL,P3_oracle,0.3,
+NZL,P4_wvs,0.2,GBR:0.214 ESP:0.225 URY:0.285
+IND,P0_global,0.0,
+IND,P1_country,1.0,
+IND,P2_common,0.2,
+IND,P3_oracle,0.3,
+IND,P4_wvs,0.3,ROU:0.297 IDN:0.424 GEO:0.440
+SVN,P0_global,0.0,
+SVN,P1_country,1.0,
+SVN,P2_common,0.2,
+SVN,P3_oracle,0.1,
+SVN,P4_wvs,0.1,FRA:0.117 DEU:0.297 NLD:0.328
+ZAF,P0_global,0.0,
+ZAF,P1_country,1.0,
+ZAF,P2_common,0.2,
+ZAF,P3_oracle,0.2,
+ZAF,P4_wvs,0.2,ROU:0.306 POL:0.327 IND:0.450
+THA,P0_global,0.0,
+THA,P1_country,1.0,
+THA,P2_common,0.2,
+THA,P3_oracle,0.4,
+THA,P4_wvs,0.1,RUS:0.080 UKR:0.182 MDA:0.437
+IDN,P0_global,0.0,
+IDN,P1_country,1.0,
+IDN,P2_common,0.2,
+IDN,P3_oracle,0.4,
+IDN,P4_wvs,0.3,GEO:0.017 IND:0.429 TUR:0.604
+PER,P0_global,0.0,
+PER,P1_country,1.0,
+PER,P2_common,0.2,
+PER,P3_oracle,0.1,
+PER,P4_wvs,0.2,CHL:0.315 BGR:0.356 BRA:0.596
+TWN,P0_global,0.0,
+TWN,P1_country,1.0,
+TWN,P2_common,0.2,
+TWN,P3_oracle,0.4,
+TWN,P4_wvs,0.1,HKG:0.245 MDA:0.293 UKR:0.500
+KOR,P0_global,0.0,
+KOR,P1_country,1.0,
+KOR,P2_common,0.2,
+KOR,P3_oracle,0.4,
+KOR,P4_wvs,0.1,MDA:0.369 HKG:0.370 SRB:0.436
+MYS,P0_global,0.0,
+MYS,P1_country,1.0,
+MYS,P2_common,0.2,
+MYS,P3_oracle,0.2,
+MYS,P4_wvs,0.2,ROU:0.231 COL:0.232 POL:0.422
+HKG,P0_global,0.0,
+HKG,P1_country,1.0,
+HKG,P2_common,0.2,
+HKG,P3_oracle,0.2,
+HKG,P4_wvs,0.3,TWN:0.244 MDA:0.258 KOR:0.374
+MDA,P0_global,0.0,
+MDA,P1_country,1.0,
+MDA,P2_common,0.2,
+MDA,P3_oracle,0.1,
+MDA,P4_wvs,0.2,HKG:0.259 TWN:0.290 UKR:0.319
+URY,P0_global,0.0,
+URY,P1_country,1.0,
+URY,P2_common,0.2,
+URY,P3_oracle,0.2,
+URY,P4_wvs,0.2,ESP:0.077 NZL:0.284 GBR:0.404
+GEO,P0_global,0.0,
+GEO,P1_country,1.0,
+GEO,P2_common,0.2,
+GEO,P3_oracle,0.3,
+GEO,P4_wvs,0.3,IDN:0.017 IND:0.446 TUR:0.597
