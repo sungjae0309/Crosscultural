@@ -41,7 +41,7 @@
 ## 폴더 구성
 
 ```
-bi-crosscultural-rec/
+Crosscultural/
 ├── data/
 │   ├── raw/lastfm/     Last.fm 원본 (직접 받아서 넣기, git에 안 올라감)
 │   ├── raw/wvs/        WVS 원본 (직접 받아서 넣기, git에 안 올라감)
@@ -85,7 +85,7 @@ bi-crosscultural-rec/
 1. 프로젝트 폴더로 이동
 
    ```bash
-   cd bi-crosscultural-rec
+   cd Crosscultural
    ```
 
 2. 가상환경 만들기 (파이썬 3.12에서 확인함)
