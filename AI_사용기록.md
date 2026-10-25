@@ -20,14 +20,15 @@
 - WVS Wave 5 CSV를 직접 열어 형식 확인 (세미콜론 구분, 쉼표 소수점, 빈칸, 음수 결측 코드) 후 `load_wvs.py` 작성
 - `check_data.py`에 WVS-Last.fm 공통 나라 표 추가 및 재실행
 - 실제 거주지로 보기 어려운 국가값 4개 제외 규칙을 `config.py`에 추가하고 데이터 확인 표 재생성 (제외 결정은 팀)
-- 실험 설계 초안 `report/실험설계_초안.md` 작성, 관련 기준값 초안을 `config.py`에 추가, README의 WVS 항목 갱신 (확정은 팀 검토 후)
+- 실험 설계 초안 `report/실험설계.md` 작성, 관련 기준값 초안을 `config.py`에 추가, README의 WVS 항목 갱신 (확정은 팀 검토 후)
 
 ## 실험 설계 외부 검토
 
 - 사용한 도구: ChatGPT (코드 편집기 확장 프로그램). 프로젝트 폴더와 강의 자료를 읽기만 하게 하고 설계 초안 검토를 맡김
-- Claude가 검토 의견을 과제 자료(`Midterm_CrossCulturalRecommendationSystems.pdf`, `Guideline.pdf`)와 데이터로 다시 확인한 뒤 설계 초안 2판에 반영. 반영 내역은 `report/실험설계_초안.md` 16절
+- Claude가 검토 의견을 과제 자료(`Midterm_CrossCulturalRecommendationSystems.pdf`, `Guideline.pdf`)와 데이터로 다시 확인한 뒤 설계 초안 2판에 반영. 반영 내역은 `report/실험설계.md` 16절
 - MBID 없는 아티스트 중복 규모 측정 (전체 기록의 0.06%)
 - `check_data.py`의 평가 불가 사용자 기준을 설계 문서와 같은 10개로 수정
 - 팀 결정(H3 추가, 15절 기준값 확정)을 설계 문서와 `config.py`에 표시
-- ChatGPT 2차 검토(2판 대상) 의견을 Claude가 문서와 코드로 확인한 뒤 설계 초안 3판에 반영. H3의 CF 학습 범위는 계산량 때문에 나라 묶음 방식으로 바꿔 반영. 반영 내역은 `report/실험설계_초안.md` 16절
+- ChatGPT 2차 검토(2판 대상) 의견을 Claude가 문서와 코드로 확인한 뒤 설계 초안 3판에 반영. H3의 CF 학습 범위는 계산량 때문에 나라 묶음 방식으로 바꿔 반영. 반영 내역은 `report/실험설계.md` 16절
 - `check_data.py`에 MBID 없는 아티스트 중복 집계(7번 항목) 추가. 이전에 0.1%로 적었던 값을 0.06%로 정정
+- 팀 확인 후 실험 설계를 확정하고 문서 이름을 `report/실험설계.md`로 바꿈
