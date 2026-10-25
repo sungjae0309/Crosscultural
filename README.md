@@ -24,7 +24,8 @@
   - [x] H2 검증 단계 (비중 고르기)
   - [x] H2 시험 단계 (결과: `results/tables/h2_test.md`)
   - [x] H3 설정 고르기, ALS 학습, 검증 단계
-  - [ ] H3 시험 단계 (코드 검토 후)
+  - [x] H3 시험 단계 (결과: `results/tables/h3_test.md`)
+  - [x] 세 가설 요약과 Holm 보정 (`results/tables/final_summary.md`)
 - [ ] 보고서
 
 ## 용어 정리
@@ -61,7 +62,8 @@ bi-crosscultural-rec/
 │   ├── run_h1.py         H1 실험 (--stage valid, --stage test)
 │   ├── run_h2.py         H2 실험 (--stage valid, --stage test)
 │   ├── cf.py             ALS 학습, fold-in, CF + 나라 인기 섞기 평가
-│   └── run_h3.py         H3 실험 (--stage tune, models, valid, test)
+│   ├── run_h3.py         H3 실험 (--stage tune, models, valid, test)
+│   └── summarize_results.py H1~H3 주 비교 요약과 Holm 보정
 ├── tests/
 │   ├── test_metrics.py   평가 지표 확인
 │   ├── test_split.py     사용자 나누기 규칙 확인 (가짜 데이터)
@@ -158,13 +160,19 @@ bi-crosscultural-rec/
     python src/run_h2.py --stage test
     ```
 
-13. H3 실험. 앞 단계부터 차례로 돌린다. 설정 고르기 6분, ALS 학습 12분, 검증 단계 55분쯤 걸리고 메모리를 5~6GB 쓴다. ALS 모델은 `data/processed/cf/`에 저장된다.
+13. H3 실험. 앞 단계부터 차례로 돌린다. 설정 고르기 6분, ALS 학습 12분, 검증 단계 55분, 시험 단계 3분쯤 걸리고 메모리를 5~6GB 쓴다. ALS 모델은 `data/processed/cf/`에 저장된다.
 
     ```bash
     python src/run_h3.py --stage tune
     python src/run_h3.py --stage models
     python src/run_h3.py --stage valid
     python src/run_h3.py --stage test
+    ```
+
+14. 세 가설 요약 (H1~H3 시험 단계를 모두 돌린 뒤)
+
+    ```bash
+    python src/summarize_results.py
     ```
 
 ## 데이터
