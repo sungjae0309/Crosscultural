@@ -21,7 +21,8 @@
 - [ ] 모델 실험
   - [x] H1 검증 단계 (비중 고르기)
   - [x] H1 시험 단계 (결과: `results/tables/h1_test.md`)
-  - [ ] H2 (인기 점수, 새 나라)
+  - [x] H2 검증 단계 (비중 고르기)
+  - [ ] H2 시험 단계 (코드 검토 후)
 - [ ] 보고서
 
 ## 용어 정리
@@ -144,7 +145,7 @@ bi-crosscultural-rec/
     python src/run_h1.py --stage test
     ```
 
-12. H2 실험. 검증 단계가 20분쯤 걸린다.
+12. H2 실험. 검증 단계가 7분쯤 걸리고 메모리를 6GB 정도 쓴다.
 
     ```bash
     python src/run_h2.py --stage valid
