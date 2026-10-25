@@ -1,0 +1,236 @@
+country,iso3,users,train,valid,test,in_h1,in_wvs,in_h2
+United States,USA,67044,46962,10041,10041,True,True,True
+Germany,DEU,31651,22171,4740,4740,True,True,True
+United Kingdom,GBR,29902,20948,4477,4477,True,True,True
+Poland,POL,20987,14703,3142,3142,True,True,True
+Russian Federation,RUS,19833,13903,2965,2965,True,True,True
+Brazil,BRA,14534,10180,2177,2177,True,True,True
+Sweden,SWE,13122,9188,1967,1967,True,True,True
+Spain,ESP,13051,9141,1955,1955,True,True,True
+Finland,FIN,11579,8107,1736,1736,True,True,True
+Netherlands,NLD,9650,6756,1447,1447,True,True,True
+Canada,CAN,8679,6079,1300,1300,True,True,True
+France,FRA,7529,5273,1128,1128,True,True,True
+Italy,ITA,7525,5271,1127,1127,True,True,True
+Australia,AUS,7135,4997,1069,1069,True,True,True
+Japan,JPN,6637,4653,992,992,True,True,True
+Turkey,TUR,6452,4520,966,966,True,True,True
+Norway,NOR,5155,3609,773,773,True,True,True
+Mexico,MEX,4834,3386,724,724,True,True,True
+Czech Republic,CZE,4774,3342,716,716,True,False,False
+Ukraine,UKR,4396,3084,656,656,True,True,True
+Belgium,BEL,3803,2663,570,570,True,False,False
+Portugal,PRT,3196,2238,479,479,True,False,False
+Switzerland,CHE,3053,2139,457,457,True,True,True
+Bulgaria,BGR,2800,1962,419,419,True,True,True
+Austria,AUT,2796,1958,419,419,True,False,False
+Chile,CHL,2794,1958,418,418,True,True,True
+Argentina,ARG,2640,1848,396,396,True,True,True
+Romania,ROU,2636,1846,395,395,True,True,True
+Denmark,DNK,2508,1756,376,376,True,False,False
+Hungary,HUN,1985,1391,297,297,True,True,True
+Lithuania,LTU,1979,1385,297,297,True,False,False
+Croatia,HRV,1917,1343,287,287,True,False,False
+Greece,GRC,1849,1299,275,275,True,False,False
+Colombia,COL,1849,1295,277,277,True,True,True
+Latvia,LVA,1736,1216,260,260,True,False,False
+Ireland,IRL,1634,1144,245,245,True,False,False
+Slovakia,SVK,1566,1096,235,235,True,False,False
+Serbia,SRB,1452,1016,218,218,True,True,True
+China,CHN,1309,923,193,193,True,True,True
+New Zealand,NZL,1247,873,187,187,True,True,True
+Belarus,BLR,1215,851,182,182,True,False,False
+Israel,ISR,1178,824,177,177,True,False,False
+Estonia,EST,1159,813,173,173,True,False,False
+India,IND,1020,716,152,152,True,True,True
+Venezuela,VEN,745,521,112,112,True,False,False
+Slovenia,SVN,673,471,101,101,True,True,True
+South Africa,ZAF,622,436,93,93,True,True,True
+Thailand,THA,602,422,90,90,True,True,True
+Indonesia,IDN,597,417,90,90,True,True,True
+Philippines,PHL,566,396,85,85,True,False,False
+Singapore,SGP,499,351,74,74,True,False,False
+Peru,PER,490,344,73,73,True,True,True
+Taiwan,TWN,429,301,64,64,True,True,True
+"Korea, Republic of",KOR,427,299,64,64,True,True,True
+Malaysia,MYS,417,293,62,62,True,True,True
+Hong Kong,HKG,372,274,49,49,True,True,True
+Iceland,ISL,368,258,55,55,True,False,False
+Costa Rica,CRI,325,227,49,49,True,False,False
+Kazakhstan,KAZ,317,223,47,47,True,False,False
+Macedonia,MKD,290,202,44,44,True,False,False
+Moldova,MDA,271,191,40,40,True,True,True
+Uruguay,URY,263,185,39,39,True,True,True
+Bosnia and Herzegovina,BIH,253,177,38,38,True,False,False
+Georgia,GEO,220,154,33,33,True,True,True
+Puerto Rico,PRI,211,147,32,32,True,False,False
+"Iran, Islamic Republic of",IRN,198,140,29,29,True,True,False
+Ecuador,ECU,196,138,29,29,True,False,False
+Guatemala,GTM,176,124,26,26,True,True,False
+Egypt,EGY,170,120,25,25,True,True,False
+Viet Nam,VNM,136,96,20,20,True,True,False
+Andorra,AND,130,90,20,20,True,True,False
+Jamaica,JAM,128,90,19,19,True,False,False
+Luxembourg,LUX,110,78,16,16,True,False,False
+United Arab Emirates,ARE,102,72,15,15,True,False,False
+Cyprus,CYP,100,70,15,15,True,True,False
+Christmas Island,CXR,95,67,14,14,False,False,False
+Dominican Republic,DOM,92,64,14,14,False,False,False
+Bangladesh,BGD,89,63,13,13,False,False,False
+Tunisia,TUN,88,62,13,13,False,False,False
+South Georgia and the South Sandwich Islands,SGS,87,61,13,13,False,False,False
+Morocco,MAR,82,58,12,12,False,True,False
+Paraguay,PRY,82,58,12,12,False,False,False
+Azerbaijan,AZE,78,54,12,12,False,False,False
+Saudi Arabia,SAU,76,54,11,11,False,False,False
+El Salvador,SLV,74,52,11,11,False,False,False
+Afghanistan,AFG,74,52,11,11,False,False,False
+Bolivia,BOL,72,50,11,11,False,False,False
+Panama,PAN,69,49,10,10,False,False,False
+Montenegro,MNE,67,47,10,10,False,False,False
+Niue,NIU,64,44,10,10,False,False,False
+Zimbabwe,ZWE,64,44,10,10,False,False,False
+Malta,MLT,63,45,9,9,False,False,False
+Lebanon,LBN,62,44,9,9,False,False,False
+Cuba,CUB,58,40,9,9,False,False,False
+Pakistan,PAK,54,38,8,8,False,False,False
+Heard Island and Mcdonald Islands,HMD,53,37,8,8,False,False,False
+Barbados,BRB,53,37,8,8,False,False,False
+Uzbekistan,UZB,52,36,8,8,False,False,False
+Honduras,HND,51,35,8,8,False,False,False
+Albania,ALB,50,34,8,8,False,False,False
+Reunion,REU,49,35,7,7,False,False,False
+Armenia,ARM,47,33,7,7,False,False,False
+Trinidad and Tobago,TTO,46,32,7,7,False,True,False
+"Palestinian Territory, Occupied",PSE,46,32,7,7,False,False,False
+Faroe Islands,FRO,46,32,7,7,False,False,False
+Fiji,FJI,43,31,6,6,False,False,False
+Djibouti,DJI,43,31,6,6,False,False,False
+Sri Lanka,LKA,40,28,6,6,False,False,False
+Algeria,DZA,40,28,6,6,False,False,False
+Greenland,GRL,39,27,6,6,False,False,False
+"Virgin Islands, British",VGB,38,26,6,6,False,False,False
+Cambodia,KHM,36,26,5,5,False,False,False
+"Micronesia, Federated States of",FSM,36,26,5,5,False,False,False
+"Virgin Islands, U.s.",VIR,35,25,5,5,False,False,False
+Aruba,ABW,34,24,5,5,False,False,False
+Mauritius,MUS,34,24,5,5,False,False,False
+Bahamas,BHS,34,24,5,5,False,False,False
+British Indian Ocean Territory,IOT,33,23,5,5,False,False,False
+Cote D'Ivoire,CIV,33,23,5,5,False,False,False
+Nepal,NPL,33,23,5,5,False,False,False
+Antigua and Barbuda,ATG,32,22,5,5,False,False,False
+Angola,AGO,31,21,5,5,False,False,False
+Uganda,UGA,31,21,5,5,False,False,False
+Wallis and Futuna,WLF,31,21,5,5,False,False,False
+Bermuda,BMU,31,21,5,5,False,False,False
+Liechtenstein,LIE,31,21,5,5,False,False,False
+Qatar,QAT,30,22,4,4,False,False,False
+Svalbard and Jan Mayen,SJM,30,22,4,4,False,False,False
+French Southern Territories,ATF,30,22,4,4,False,False,False
+Macao,MAC,30,22,4,4,False,False,False
+"Korea, Democratic People's Republic of",PRK,29,21,4,4,False,False,False
+Pitcairn,PCN,29,21,4,4,False,False,False
+Bahrain,BHR,29,21,4,4,False,False,False
+Papua New Guinea,PNG,29,21,4,4,False,False,False
+Burkina Faso,BFA,29,21,4,4,False,True,False
+Nicaragua,NIC,29,21,4,4,False,False,False
+Mongolia,MNG,29,21,4,4,False,False,False
+Jordan,JOR,28,20,4,4,False,True,False
+Tuvalu,TUV,27,19,4,4,False,False,False
+Western Sahara,ESH,27,19,4,4,False,False,False
+Guadeloupe,GLP,26,18,4,4,False,False,False
+Brunei Darussalam,BRN,25,17,4,4,False,False,False
+Madagascar,MDG,25,17,4,4,False,False,False
+Guam,GUM,25,17,4,4,False,False,False
+Cayman Islands,CYM,25,17,4,4,False,False,False
+Kenya,KEN,24,16,4,4,False,False,False
+Saint Vincent and the Grenadines,VCT,23,17,3,3,False,False,False
+Monaco,MCO,23,17,3,3,False,False,False
+Bhutan,BTN,23,17,3,3,False,False,False
+Martinique,MTQ,23,17,3,3,False,False,False
+Syrian Arab Republic,SYR,22,16,3,3,False,False,False
+Seychelles,SYC,22,16,3,3,False,False,False
+Botswana,BWA,22,16,3,3,False,False,False
+American Samoa,ASM,22,16,3,3,False,False,False
+Cook Islands,COK,22,16,3,3,False,False,False
+Bouvet Island,BVT,22,16,3,3,False,False,False
+Cape Verde,CPV,22,16,3,3,False,False,False
+Maldives,MDV,21,15,3,3,False,False,False
+Ghana,GHA,21,15,3,3,False,True,False
+Kuwait,KWT,21,15,3,3,False,False,False
+"Congo, the Democratic Republic of the",COD,21,15,3,3,False,False,False
+Kiribati,KIR,20,14,3,3,False,False,False
+French Polynesia,PYF,20,14,3,3,False,False,False
+Nigeria,NGA,20,14,3,3,False,False,False
+Vanuatu,VUT,20,14,3,3,False,False,False
+Mozambique,MOZ,19,13,3,3,False,False,False
+Haiti,HTI,19,13,3,3,False,False,False
+Sao Tome and Principe,STP,18,12,3,3,False,False,False
+Chad,TCD,18,12,3,3,False,False,False
+Somalia,SOM,17,11,3,3,False,False,False
+Norfolk Island,NFK,17,11,3,3,False,False,False
+Netherlands Antilles,ANT,17,11,3,3,False,False,False
+Ethiopia,ETH,17,11,3,3,False,True,False
+Saint Helena,SHN,16,12,2,2,False,False,False
+Gibraltar,GIB,16,12,2,2,False,False,False
+Oman,OMN,15,11,2,2,False,False,False
+Niger,NER,15,11,2,2,False,False,False
+Yemen,YEM,15,11,2,2,False,False,False
+Swaziland,SWZ,14,10,2,2,False,False,False
+Tajikistan,TJK,14,10,2,2,False,False,False
+Togo,TGO,14,10,2,2,False,False,False
+Kyrgyzstan,KGZ,14,10,2,2,False,False,False
+Samoa,WSM,14,10,2,2,False,False,False
+Falkland Islands (Malvinas),FLK,14,10,2,2,False,False,False
+Libyan Arab Jamahiriya,LBY,14,10,2,2,False,False,False
+Nauru,NRU,14,10,2,2,False,False,False
+Congo,COG,14,10,2,2,False,False,False
+Iraq,IRQ,13,9,2,2,False,True,False
+Anguilla,AIA,13,9,2,2,False,False,False
+Sierra Leone,SLE,13,9,2,2,False,False,False
+Montserrat,MSR,13,9,2,2,False,False,False
+Turks and Caicos Islands,TCA,13,9,2,2,False,False,False
+Turkmenistan,TKM,13,9,2,2,False,False,False
+Zambia,ZMB,13,9,2,2,False,True,False
+Tokelau,TKL,12,8,2,2,False,False,False
+Northern Mariana Islands,MNP,12,8,2,2,False,False,False
+Lao People's Democratic Republic,LAO,12,8,2,2,False,False,False
+Dominica,DMA,11,7,2,2,False,False,False
+New Caledonia,NCL,11,7,2,2,False,False,False
+Timor-Leste,TLS,11,7,2,2,False,False,False
+Lesotho,LSO,11,7,2,2,False,False,False
+Saint Pierre and Miquelon,SPM,11,7,2,2,False,False,False
+"Tanzania, United Republic of",TZA,11,7,2,2,False,False,False
+Solomon Islands,SLB,10,8,1,1,False,False,False
+Saint Kitts and Nevis,KNA,10,6,2,2,False,False,False
+Burundi,BDI,10,6,2,2,False,False,False
+Equatorial Guinea,GNQ,10,6,2,2,False,False,False
+Senegal,SEN,9,7,1,1,False,False,False
+San Marino,SMR,9,7,1,1,False,False,False
+Cameroon,CMR,9,7,1,1,False,False,False
+Namibia,NAM,9,7,1,1,False,False,False
+Tonga,TON,8,6,1,1,False,False,False
+Mayotte,MYT,8,6,1,1,False,False,False
+Gabon,GAB,8,6,1,1,False,False,False
+Comoros,COM,8,6,1,1,False,False,False
+Rwanda,RWA,8,6,1,1,False,True,False
+Saint Lucia,LCA,8,6,1,1,False,False,False
+Grenada,GRD,7,5,1,1,False,False,False
+Myanmar,MMR,7,5,1,1,False,False,False
+Mali,MLI,7,5,1,1,False,True,False
+Belize,BLZ,6,4,1,1,False,False,False
+Eritrea,ERI,6,4,1,1,False,False,False
+Malawi,MWI,6,4,1,1,False,False,False
+Suriname,SUR,5,3,1,1,False,False,False
+Sudan,SDN,5,3,1,1,False,False,False
+Guinea-Bissau,GNB,5,3,1,1,False,False,False
+Guyana,GUY,5,3,1,1,False,False,False
+Mauritania,MRT,5,3,1,1,False,False,False
+Central African Republic,CAF,5,3,1,1,False,False,False
+Marshall Islands,MHL,4,2,1,1,False,False,False
+French Guiana,GUF,4,2,1,1,False,False,False
+Gambia,GMB,3,3,0,0,False,False,False
+Liberia,LBR,3,3,0,0,False,False,False
+Benin,BEN,3,3,0,0,False,False,False
+Palau,PLW,3,3,0,0,False,False,False

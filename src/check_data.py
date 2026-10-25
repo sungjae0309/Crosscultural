@@ -7,16 +7,15 @@
 import pandas as pd
 
 from config import (
-    EXCLUDED_ISO3,
     MIN_ARTISTS_EVAL_USER,
     MIN_USERS_PER_COUNTRY,
     TABLES_DIR,
     WVS_CSV_PATH,
     WVS_INDEX_COLUMNS,
 )
-from country_codes import country_name_to_iso3
 from load_lastfm import load_plays, load_profiles
 from load_wvs import load_wvs
+from users import build_user_table
 
 # 나라를 몇 명 기준으로 자를지 감을 잡으려고 여러 기준을 한 번에 본다
 USER_COUNT_THRESHOLDS = [50, 100, 200, 500, 1000]
@@ -45,17 +44,8 @@ def main():
     plays = load_plays()
 
     # ---------- 사용자 단위 표 만들기 ----------
-    artists_per_user = plays.groupby("user_id").size().rename("n_artists")
-    users = profiles.merge(artists_per_user, left_on="user_id", right_index=True, how="inner")
-
-    iso_results = {name: country_name_to_iso3(name) for name in users["country"].unique()}
-    users["iso3"] = users["country"].map(lambda name: iso_results[name][0])
-    users["iso_match"] = users["country"].map(lambda name: iso_results[name][1])
-
     # 실제 거주지로 보기 어려운 국가값은 이후 모든 표에서 뺀다
-    is_excluded = users["iso3"].isin(EXCLUDED_ISO3)
-    excluded_users = users[is_excluded]
-    users = users[~is_excluded]
+    users, excluded_users = build_user_table(profiles, plays)
 
     users_with_country = users[users["country"] != ""]
     users_with_iso = users_with_country[users_with_country["iso3"].notna()]
