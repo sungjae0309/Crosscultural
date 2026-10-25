@@ -58,12 +58,15 @@ bi-crosscultural-rec/
 │   ├── seeds.py          무작위 단계의 시드 만들기
 │   ├── wvs_distance.py   WVS 가치관으로 나라 사이 거리 재기
 │   ├── run_h1.py         H1 실험 (--stage valid, --stage test)
-│   └── run_h2.py         H2 실험 (--stage valid, --stage test)
+│   ├── run_h2.py         H2 실험 (--stage valid, --stage test)
+│   ├── cf.py             ALS 학습, fold-in, CF + 나라 인기 섞기 평가
+│   └── run_h3.py         H3 실험 (--stage tune, models, valid, test)
 ├── tests/
 │   ├── test_metrics.py   평가 지표 확인
 │   ├── test_split.py     사용자 나누기 규칙 확인 (가짜 데이터)
 │   ├── test_popularity.py 인기 점수, 행렬 평가, 비중 고르기, 통계 확인
-│   └── test_h2.py        H2 조건(빼는 나라, 초기 사용자), WVS 거리 확인
+│   ├── test_h2.py        H2 조건(빼는 나라, 초기 사용자), WVS 거리 확인
+│   └── test_cf.py        CF 빠른 순위 계산이 전체 계산과 같은지, 나라 묶음 확인
 ├── results/
 │   ├── tables/         결과 표 (data_check.md에 데이터 확인 결과)
 │   └── figures/        결과 그림
@@ -137,6 +140,7 @@ bi-crosscultural-rec/
     python tests/test_split.py
     python tests/test_popularity.py
     python tests/test_h2.py
+    python tests/test_cf.py
     ```
 
 11. H1 실험 (각 1분쯤). 검증 단계를 먼저 돌려야 시험 단계가 돈다.
