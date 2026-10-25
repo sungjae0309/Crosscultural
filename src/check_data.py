@@ -12,6 +12,7 @@ from config import (
     N_SHOWN_ARTISTS,
     TABLES_DIR,
     WVS_CSV_PATH,
+    WVS_INDEX_COLUMNS,
 )
 from country_codes import country_name_to_iso3
 from load_lastfm import load_plays, load_profiles
@@ -19,10 +20,6 @@ from load_wvs import load_wvs
 
 # 나라를 몇 명 기준으로 자를지 감을 잡으려고 여러 기준을 한 번에 본다
 USER_COUNT_THRESHOLDS = [50, 100, 200, 500, 1000]
-
-
-# 나라 간 가치관 거리 후보로 볼 WVS 종합 지표 (0~1). 코드북의 Welzel 지수
-WVS_INDEX_COLUMNS = ["SACSECVAL", "RESEMAVAL"]
 
 
 def wvs_country_table(country_user_counts):

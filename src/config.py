@@ -46,6 +46,29 @@ N_SHOWN_ARTISTS = 5
 # 추천 목록 길이. Recall@K, NDCG@K의 K
 TOP_K = 10
 
+# 평가 사용자로 쓰려면 아티스트가 이만큼은 있어야 한다 (보여줄 5개 + 정답)
+MIN_ARTISTS_EVAL_USER = 10
+
+# ---------- 섞기 (초안) ----------
+# 섞은 점수 = (1 - w) * 전체 인기 + w * 나라 인기. w 후보
+WEIGHT_GRID = [round(step / 10, 1) for step in range(11)]
+# 인기 점수 기준: "listeners" = 들은 사용자 비율, "plays" = 재생 수 합 (보조 분석)
+POPULARITY_MEASURE = "listeners"
+
 # ---------- 새 나라 실험 H2 (초안) ----------
+# H2 대상 나라의 최소 사용자 수 (초기 사용자를 뽑고도 시험 사용자가 30명은 남게)
+MIN_USERS_H2 = 200
 # 새 나라에서 인기 목록을 만들 때 쓰는 초기 사용자 수
 N_EARLY_USERS = 50
+# 초기 사용자 뽑기 반복 횟수
+N_EARLY_REPEATS = 5
+# WVS 거리가 가까운 나라 몇 개의 비중을 평균 낼지
+WVS_NEIGHBORS_K = 3
+# 무작위 나라 비교를 몇 번 반복할지
+N_RANDOM_REPEATS = 100
+
+# ---------- WVS (초안) ----------
+# 나라 거리에 쓰는 WVS 종합 지수 (Welzel). 결과를 보기 전에 고정한다
+WVS_INDEX_COLUMNS = ["SACSECVAL", "RESEMAVAL"]
+# 응답자 가중치
+WVS_WEIGHT_COLUMN = "V259"

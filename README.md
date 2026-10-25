@@ -15,7 +15,8 @@
 - [x] 폴더, 가상환경, 패키지 세팅
 - [x] Last.fm 360K 받기
 - [x] 데이터 확인: Last.fm 쪽 (나라별 사용자 수, 사용자당 아티스트 수)
-- [ ] 데이터 확인: WVS와 겹치는 나라 (WVS 파일 받은 뒤)
+- [x] 데이터 확인: WVS와 겹치는 나라 (사용자 100명 이상 기준 48개)
+- [ ] 실험 설계 확정 (초안: `report/실험설계_초안.md`)
 - [ ] 모델 실험
 - [ ] 보고서
 
@@ -40,12 +41,13 @@ bi-crosscultural-rec/
 ├── src/
 │   ├── config.py         경로와 숫자 기준값(K, 보여줄 아티스트 수 등)을 모아둔 곳
 │   ├── load_lastfm.py    Last.fm 원본을 읽고 정리하는 함수
+│   ├── load_wvs.py       WVS Wave 5 CSV를 읽는 함수
 │   ├── country_codes.py  나라 이름을 ISO 세 글자 코드(예: KOR)로 바꾸는 함수
 │   └── check_data.py     데이터 확인 표를 만드는 코드
 ├── results/
 │   ├── tables/         결과 표 (data_check.md에 데이터 확인 결과)
 │   └── figures/        결과 그림
-├── report/             보고서에 넣을 자료
+├── report/             보고서에 넣을 자료 (실험설계_초안.md)
 ├── requirements.txt    필요한 파이썬 패키지 목록
 └── AI_사용기록.md       AI로 한 작업 기록 (보고서에 밝혀야 함)
 ```
@@ -109,7 +111,7 @@ bi-crosscultural-rec/
 - 내용: 사용자별로 많이 들은 아티스트와 재생 횟수, 사용자 프로필(국가 포함)
 - 2008~2009년쯤 모은 한 시점의 기록이라 "언제 들었는지" 순서 정보는 없다.
 - 압축을 풀면 `data/raw/lastfm/lastfm-dataset-360K/` 안에 tsv 파일 두 개가 생긴다. 파일이 맞는지는 같이 들어있는 README.txt의 MD5 값으로 확인할 수 있다.
-- 나라는 사용자가 프로필에 직접 고른 값이다. "Antarctica"(365명)처럼 실제 거주지로 보기 어려운 값도 있다.
+- 나라는 사용자가 프로필에 직접 고른 값이다. "Antarctica"(365명)처럼 실제 거주지로 보기 어려운 값 4개(사용자 717명)는 뺀다. 목록은 `src/config.py`의 `EXCLUDED_ISO3`.
 
 정리 규칙 (`src/load_lastfm.py`)
 - 아티스트 구분: MusicBrainz ID(mbid, 아티스트마다 붙은 고유 번호)가 있으면 그걸 쓰고, 없으면 아티스트 이름을 쓴다. 같은 mbid가 여러 이름 표기로 나오는 경우가 많아서 mbid를 먼저 쓴다.
@@ -123,8 +125,11 @@ bi-crosscultural-rec/
 
 - 받는 곳: https://www.worldvaluessurvey.org (Data & Documentation → Wave 5)
 - 넣는 곳: `data/raw/wvs/`
-- 사이트에서 이름과 사용 목적을 적어야 받을 수 있다.
-- 다운로드 조건과 인용 형식은 받을 때 확인해서 여기에 적는다. (아직 미정)
+- 받을 파일: `WV5_Data_csv_v20180912` (CSV). 같은 페이지의 Codebook, Questionnaire RootVersion, WVSA Citation format PDF도 같이 받는다.
+- 사이트에서 이름, 소속, 사용 목적을 적고 이용 조건에 동의해야 받을 수 있다.
+- 이용 조건: 비영리 목적만, 데이터 파일 재배포 금지, 결과를 쓸 때 참고문헌에 인용.
+- 파일 형식 (`src/load_wvs.py`): 세미콜론 구분, 쉼표 소수점(예: `,94` = 0.94), 빈칸과 음수(-1~-5)는 결측. V2가 ISO 숫자 나라 코드.
+- 인용: Inglehart, R., C. Haerpfer, A. Moreno, C. Welzel, K. Kizilova, J. Diez-Medrano, M. Lagos, P. Norris, E. Ponarin & B. Puranen et al. (eds.). 2018. World Values Survey: Round Five - Country-Pooled Datafile. Madrid, Spain & Vienna, Austria: JD Systems Institute & WVSA Secretariat. doi.org/10.14281/18241.7
 
 ### 재배포 금지
 
