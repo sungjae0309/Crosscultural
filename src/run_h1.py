@@ -31,6 +31,7 @@ from popularity import (
     listener_counts,
     load_popularity_data,
     popularity_share,
+    relevant_in_catalog_share,
 )
 from stats import paired_summary
 
@@ -140,10 +141,11 @@ def run_test(data, countries, measure):
         "P2u_common_user_weighted": lambda iso3: common["common_user_weighted"],
         "P3_country_weight": lambda iso3: weights[iso3],
     }
-    rows, recommended = [], {name: set() for name in methods}
+    rows, recommended, overlap_rows = [], {name: set() for name in methods}, []
     for country in countries.itertuples():
         country_share = popularity_share(data, [country.iso3], measure)
         user_ids = test_users.loc[test_users["iso3"] == country.iso3, "user_id"]
+        overlap_rows.append((country.iso3, relevant_in_catalog_share(data, user_ids).mean()))
         for name, weight_of in methods.items():
             weight = weight_of(country.iso3)
             scores = mixed_scores(global_share, country_share, weight)
@@ -152,6 +154,8 @@ def run_test(data, countries, measure):
             rows.append((country.iso3, name, weight, ndcg.mean(), recall.mean(), len(user_ids)))
     results = pd.DataFrame(rows, columns=["iso3", "method", "w", "ndcg", "recall", "n_users"])
     results.to_csv(TABLES_DIR / output_name("test_by_country.csv", measure), index=False)
+    overlap = pd.DataFrame(overlap_rows, columns=["iso3", "relevant_in_catalog"])
+    overlap.to_csv(TABLES_DIR / output_name("item_overlap.csv", measure), index=False)
 
     by_method = results.groupby("method").agg(ndcg=("ndcg", "mean"), recall=("recall", "mean"))
     by_method["coverage"] = [
@@ -198,6 +202,12 @@ def run_test(data, countries, measure):
         "## 주 비교를 나라 크기별로",
         by_size.round(4).to_markdown(index=False),
         "",
+        "## 아이템 겹침",
+        "시험 사용자의 정답 중 순위 대상(학습 사용자가 들은 아티스트)에 들어 있는 비율. 나라별 평균의 요약.",
+        "전체 목록은 `" + output_name("item_overlap.csv", measure) + "`.",
+        "",
+        overlap["relevant_in_catalog"].describe().round(4).rename_axis("통계").reset_index(name="값").to_markdown(index=False),
+        "",
     ]
     (TABLES_DIR / output_name("test.md", measure)).write_text("\n".join(lines), encoding="utf-8")
     print(summary.round(4).to_string(index=False))
@@ -229,7 +239,7 @@ def main():
     args = parser.parse_args()
 
     print("자료 준비 중...")
-    data = load_popularity_data()
+    data = load_popularity_data(args.stage)
     countries = h1_countries()
     if args.stage == "valid":
         run_valid(data, countries, args.measure)

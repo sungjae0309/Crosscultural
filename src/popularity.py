@@ -20,18 +20,31 @@ class PopularityData:
     country_listeners: dict  # iso3 -> 아티스트별 학습 청취자 수 (catalog 길이 배열)
     country_plays: dict  # iso3 -> 아티스트별 학습 재생 수 합
     country_train_users: dict  # iso3 -> 학습 사용자 수
-    eval_users: pd.DataFrame  # user_id, iso3, split (검증·시험 사용자만)
+    eval_users: pd.DataFrame  # user_id, iso3, split (이번 단계의 평가 사용자만)
     shown_index: dict  # user_id -> 보여준 아티스트의 catalog 번호 (catalog에 없는 것은 빠짐)
     relevant: dict  # user_id -> 정답 artist_id 집합 (catalog에 없는 것도 포함)
 
 
-def load_popularity_data():
-    """나누기 결과(split_users.py)와 재생 기록으로 실험 자료를 만든다."""
+def load_popularity_data(stage):
+    """나누기 결과(split_users.py)와 재생 기록으로 실험 자료를 만든다.
+
+    stage("valid" 또는 "test")의 평가 사용자 자료만 읽는다.
+    """
     split = pd.read_csv(PROCESSED_DIR / "user_split.csv", dtype=str, keep_default_na=False)
     shown = pd.read_csv(PROCESSED_DIR / "shown_artists.csv", dtype=str, keep_default_na=False)
-
     plays = load_plays()[["user_id", "artist_id", "plays"]]
+    return build_popularity_data(split, shown, plays, stage)
+
+
+def build_popularity_data(split, shown, plays, stage):
+    """학습 사용자로 인기 점수 재료를, stage 사용자로 평가 자료를 만든다.
+
+    다른 단계의 평가 사용자 기록은 아예 쓰지 않는다.
+    """
+    if stage not in ("valid", "test"):
+        raise ValueError("stage는 valid 또는 test")
     plays = plays.merge(split[["user_id", "iso3", "split"]], on="user_id", how="inner")
+    plays = plays[plays["split"].isin(["train", stage])]
 
     # ---------- 학습 사용자로만 인기 점수 재료를 만든다 ----------
     train = plays[plays["split"] == "train"]
@@ -48,11 +61,12 @@ def load_popularity_data():
     train_users = split[split["split"] == "train"]
     country_train_users = train_users.groupby("iso3").size().to_dict()
 
-    # ---------- 평가 사용자: 보여준 것과 정답 ----------
-    eval_users = split.loc[split["split"] != "train", ["user_id", "iso3", "split"]].reset_index(
+    # ---------- 이번 단계의 평가 사용자: 보여준 것과 정답 ----------
+    eval_users = split.loc[split["split"] == stage, ["user_id", "iso3", "split"]].reset_index(
         drop=True
     )
-    eval_plays = plays.loc[plays["split"] != "train", ["user_id", "artist_id"]]
+    shown = shown[shown["user_id"].isin(eval_users["user_id"])]
+    eval_plays = plays.loc[plays["split"] == stage, ["user_id", "artist_id"]]
     shown_pairs = set(zip(shown["user_id"], shown["artist_id"]))
     is_shown = np.fromiter(
         (pair in shown_pairs for pair in zip(eval_plays["user_id"], eval_plays["artist_id"])),
@@ -97,6 +111,18 @@ def popularity_share(data, countries, measure):
 def listener_counts(data, countries):
     """동점 처리용 청취자 수. 주어진 나라들의 학습 사용자로만 센다."""
     return sum(data.country_listeners[iso3] for iso3 in countries)
+
+
+def relevant_in_catalog_share(data, user_ids):
+    """사용자마다 정답 중 순위 대상에 들어 있는 비율 (아이템 겹침, 설계 4.1절)."""
+    catalog = set(data.catalog)
+    return np.array(
+        [
+            sum(1 for artist_id in data.relevant[user_id] if artist_id in catalog)
+            / len(data.relevant[user_id])
+            for user_id in user_ids
+        ]
+    )
 
 
 def recommend_from_head(head, shown_index, k):

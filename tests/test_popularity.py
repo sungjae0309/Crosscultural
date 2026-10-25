@@ -7,12 +7,19 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from config import N_SHOWN_ARTISTS  # noqa: E402
 from metrics import top_k  # noqa: E402
-from popularity import PopularityData, popularity_share, recommend_from_head  # noqa: E402
+from popularity import (  # noqa: E402
+    PopularityData,
+    build_popularity_data,
+    popularity_share,
+    recommend_from_head,
+    relevant_in_catalog_share,
+)
 from run_h1 import best_weight  # noqa: E402
 from stats import holm_adjust, paired_summary  # noqa: E402
 
@@ -39,6 +46,59 @@ def _fake_data():
         shown_index={},
         relevant={},
     )
+
+
+def _fake_frames():
+    split = pd.DataFrame(
+        [("t1", "AAA", "train"), ("t2", "AAA", "train"), ("v1", "AAA", "valid"), ("s1", "AAA", "test")],
+        columns=["user_id", "iso3", "split"],
+    )
+    rows = [("t1", "a", 3), ("t1", "b", 1), ("t2", "a", 2)]
+    rows += [("v1", artist, 1) for artist in ["a", "b", "x1", "x2", "x3", "zzz"]]
+    rows += [("s1", artist, 1) for artist in ["a", "b", "c", "d", "e", "f"]]
+    plays = pd.DataFrame(rows, columns=["user_id", "artist_id", "plays"])
+    shown = pd.DataFrame(
+        [("v1", artist) for artist in ["a", "x1", "x2", "x3", "zzz"]]
+        + [("s1", artist) for artist in ["a", "b", "c", "d", "e"]],
+        columns=["user_id", "artist_id"],
+    )
+    return split, shown, plays
+
+
+def test_build_uses_train_only_for_catalog_and_counts():
+    split, shown, plays = _fake_frames()
+    data = build_popularity_data(split, shown, plays, "valid")
+    # 순위 대상과 인기 재료는 학습 사용자(t1, t2)로만
+    assert list(data.catalog) == ["a", "b"]
+    assert list(data.country_listeners["AAA"]) == [2, 1]
+    assert data.country_train_users["AAA"] == 2
+    # 이번 단계 사용자만
+    assert list(data.eval_users["user_id"]) == ["v1"]
+    assert set(data.relevant) == {"v1"} and set(data.shown_index) == {"v1"}
+    # 정답 = 보여준 5개를 뺀 나머지. 순위 대상 밖이어도 남는다
+    assert data.relevant["v1"] == {"b"}
+    # 보여준 것 중 순위 대상 안에 있는 것만 번호로 바뀐다
+    assert list(data.shown_index["v1"]) == [0]
+
+
+def test_valid_data_ignores_test_rows():
+    split, shown, plays = _fake_frames()
+    before = build_popularity_data(split, shown, plays, "valid")
+    changed = plays.copy()
+    changed.loc[changed["user_id"] == "s1", "artist_id"] = "changed"
+    changed_shown = shown[shown["user_id"] != "s1"]
+    after = build_popularity_data(split, changed_shown, changed, "valid")
+    assert list(before.catalog) == list(after.catalog)
+    assert before.relevant == after.relevant
+    assert all(np.array_equal(before.shown_index[u], after.shown_index[u]) for u in before.shown_index)
+    assert np.array_equal(before.country_listeners["AAA"], after.country_listeners["AAA"])
+
+
+def test_relevant_in_catalog_share():
+    split, shown, plays = _fake_frames()
+    data = build_popularity_data(split, shown, plays, "test")
+    # s1 정답은 f 하나, 순위 대상(a, b) 밖
+    assert list(relevant_in_catalog_share(data, ["s1"])) == [0.0]
 
 
 def test_popularity_share():
