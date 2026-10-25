@@ -1,0 +1,14 @@
+# 데이터 처리
+pandas==3.1.0
+numpy==2.5.4
+scipy==1.18.1
+# 그림
+matplotlib==3.11.2
+# 나라 이름 맞추기 (ISO 코드 변환)
+pycountry==26.2.16
+# 표를 마크다운으로 저장할 때 필요
+tabulate==0.10.0
+# WVS가 SPSS(.sav)나 Stata(.dta) 형식일 때 읽기
+pyreadstat==1.3.7
+# 협업 필터링 (ALS / BPR)
+implicit==0.7.3
