@@ -77,29 +77,38 @@ def _reference(data, model, users, weight, country_share, global_share, tie, mas
 def test_fast_ranking_matches_reference():
     rng = np.random.default_rng(3)
     original = cf.CANDIDATES_PER_SOURCE
+    exact_counts = []
     try:
-        for trial in range(6):
+        for trial in range(4):
             split, shown, plays = _frames(rng)
             data = build_popularity_data(split, shown, plays, "valid")
             model = cf.train_cf(data, ["BBB", "CCC"], factors=8, regularization=0.1)
-            # 후보 수를 작게 하면 상한 확인에 걸려 전체 계산으로 가는 사용자가 생긴다
-            cf.CANDIDATES_PER_SOURCE = [3, 100][trial % 2]
-            users = cf.prepare_users(data, model, "AAA", candidates=cf.CANDIDATES_PER_SOURCE)
-            assert not users.usable[0]  # 첫 사용자는 대체 규칙을 탄다
             early = data.train_users["AAA"][:5]
             country_share = user_listener_counts(data, early) / len(early)
             listeners = listener_counts(data, ["BBB", "CCC"])
             global_share = listeners / sum(data.country_train_users[c] for c in ["BBB", "CCC"])
             tie = listeners + user_listener_counts(data, early)
             mask = tie > 0
-            for weight in [0.0, 0.3, 0.7, 1.0]:
-                got = cf.evaluate_mix(data, model, users, weight, country_share, global_share, tie, mask, "AAA", 10)
-                expected = _reference(data, model, users, weight, country_share, global_share, tie, mask, 10)
-                assert np.allclose(got[0], expected[0], atol=1e-12), (trial, weight)
-                assert np.allclose(got[1], expected[1], atol=1e-12), (trial, weight)
-                assert got[2] == expected[2], (trial, weight)
+            # 후보 수를 작게 하면 상한 확인에 걸려 전체 계산으로 가는 사용자가 생긴다
+            for candidates in [3, 11, 12, 15, 100]:
+                cf.CANDIDATES_PER_SOURCE = candidates
+                users = cf.prepare_users(data, model, "AAA", candidates=candidates)
+                assert not users.usable[0]  # 첫 사용자는 대체 규칙을 탄다
+                for weight in [0.0, 0.3, 0.7, 1.0]:
+                    got = cf.evaluate_mix(data, model, users, weight, country_share, global_share, tie, mask, "AAA", 10)
+                    expected = _reference(data, model, users, weight, country_share, global_share, tie, mask, 10)
+                    assert np.allclose(got[0], expected[0], atol=1e-12), (trial, candidates, weight)
+                    assert np.allclose(got[1], expected[1], atol=1e-12), (trial, candidates, weight)
+                    assert got[2] == expected[2], (trial, candidates, weight)
+                    if weight < 1.0:
+                        exact_counts.append(got[3])
     finally:
         cf.CANDIDATES_PER_SOURCE = original
+    # 빠른 계산과 전체 계산이 둘 다 실제로 쓰였는지 (사용자 30명 중 전체 계산 인원)
+    # 대체 규칙 사용자 1명은 늘 전체 계산이고, 한 번의 평가 안에서 두 경로가 섞인 경우도 있어야 한다
+    assert min(exact_counts) >= 1
+    assert any(1 < count < 30 for count in exact_counts)
+    assert exact_counts.count(1) > 0
 
 
 def test_train_matrix_and_in_model():
