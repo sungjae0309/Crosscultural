@@ -70,6 +70,10 @@ N_EARLY_REPEATS = 10
 WVS_NEIGHBORS_K = 3
 # 무작위 나라 비교를 몇 번 반복할지
 N_RANDOM_REPEATS = 100
+# 실패 분석의 "자기 나라 취향" 대리 지표: 그 나라 상위 LOCAL_TOP_N개 중
+# 그 나라를 뺀 전체의 상위 GLOBAL_TOP_N개에 없는 비율 (학습 사용자 기준)
+LOCAL_TOP_N = 100
+GLOBAL_TOP_N = 1000
 
 # ---------- 협업 필터링 H3 ----------
 # ALS 설정 후보. 검증 사용자로 고른다

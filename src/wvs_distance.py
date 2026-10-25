@@ -14,7 +14,11 @@ from load_wvs import load_wvs
 
 def country_index_means():
     """나라(iso3)별 WVS 지표의 가중 평균 표."""
-    wvs = load_wvs(WVS_INDEX_COLUMNS + [WVS_WEIGHT_COLUMN])
+    return weighted_index_means(load_wvs(WVS_INDEX_COLUMNS + [WVS_WEIGHT_COLUMN]))
+
+
+def weighted_index_means(wvs):
+    """응답자 표(iso3, 지표, 가중치)를 나라별 가중 평균 표로. 결측은 지표마다 뺀다."""
     rows = []
     for iso3, group in wvs.groupby("iso3", sort=True):
         row = {"iso3": iso3}

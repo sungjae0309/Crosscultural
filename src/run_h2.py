@@ -23,6 +23,8 @@ import numpy as np
 import pandas as pd
 
 from config import (
+    GLOBAL_TOP_N,
+    LOCAL_TOP_N,
     N_EARLY_REPEATS,
     N_EARLY_USERS,
     N_RANDOM_REPEATS,
@@ -31,6 +33,7 @@ from config import (
     WEIGHT_GRID,
     WVS_NEIGHBORS_K,
 )
+from metrics import top_k
 from popularity import (
     evaluate_shared_scores,
     listener_counts,
@@ -102,6 +105,71 @@ def valid_curve(data, conditions, country, excluded):
     return curves.mean(axis=0)
 
 
+def choose_weights(donor_curves, own_curve, neighbors, pool, rng, k):
+    """검증 곡선으로 방법별 w를 고른다 (설계 8.3절).
+
+    donor_curves: 빌려줄 나라 -> w별 검증 NDCG (WEIGHT_GRID 순). own_curve: t 자신의 곡선.
+    여러 나라를 쓸 때는 그 나라들 곡선의 평균이 가장 높은 w를 고른다.
+    돌려주는 값: (방법 -> w, [(무작위로 뽑은 나라 목록, w), ...])
+    """
+
+    def pooled_best(countries):
+        return best_weight(WEIGHT_GRID, np.mean([donor_curves[c] for c in countries], axis=0))
+
+    fixed = {
+        "P0_global": 0.0,
+        "P1_country": 1.0,
+        "P2_common": pooled_best(pool),
+        "P3_oracle": best_weight(WEIGHT_GRID, own_curve),
+        "P4_wvs": pooled_best([iso3 for iso3, _ in neighbors]),
+    }
+    draws = []
+    for _ in range(N_RANDOM_REPEATS):
+        chosen = sorted(str(iso3) for iso3 in rng.choice(pool, size=k, replace=False))
+        draws.append((chosen, pooled_best(chosen)))
+    return fixed, draws
+
+
+def method_values(target_repeats, fixed, draw_weights):
+    """한 나라의 반복별 시험 결과에서 방법별 값을 가져온다.
+
+    target_repeats: repeat, w, ndcg, recall, coverage 열. 방법마다 검증 단계에서 정한 w의 행만 쓴다.
+    P5는 뽑기마다 고른 w의 값을 (같은 w가 여러 번 뽑혔으면 그 횟수만큼) 평균 낸다.
+    반복을 먼저 평균 내고, 반복 사이 표준편차도 돌려준다.
+    """
+    indexed = target_repeats.set_index(["repeat", "w"])[["ndcg", "recall", "coverage"]]
+    repeats = sorted(target_repeats["repeat"].unique())
+    rows = []
+    for method in METHODS:
+        chosen = list(draw_weights) if method == "P5_random" else [fixed[method]]
+        per_repeat = np.array(
+            [indexed.loc[[(repeat, w) for w in chosen]].mean().to_numpy() for repeat in repeats]
+        )
+        rows.append(
+            {
+                "method": method,
+                "w": fixed.get(method, np.nan),
+                "ndcg": per_repeat[:, 0].mean(),
+                "recall": per_repeat[:, 1].mean(),
+                "coverage": per_repeat[:, 2].mean(),
+                "ndcg_sd_over_repeats": per_repeat[:, 0].std(ddof=1) if len(repeats) > 1 else 0.0,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def local_taste_share(data, target):
+    """자기 나라 취향 대리 지표 (실패 분석용, 학습 사용자만 사용).
+
+    t 학습 사용자 상위 LOCAL_TOP_N개 아티스트 중, t를 뺀 나라 학습 사용자 상위 GLOBAL_TOP_N개에 없는 비율.
+    """
+    own = data.country_listeners[target]
+    others = listener_counts(data, [iso3 for iso3 in data.country_listeners if iso3 != target])
+    local_top = top_k(own.astype(float), own, exclude=[], k=LOCAL_TOP_N)
+    global_top = set(top_k(others.astype(float), others, exclude=[], k=GLOBAL_TOP_N).tolist())
+    return float(np.mean([index not in global_top for index in local_top]))
+
+
 def run_valid(data, targets, n_early, k):
     conditions = Conditions(data, targets, n_early)
     means = country_index_means()
@@ -115,30 +183,18 @@ def run_valid(data, targets, n_early, k):
             curve_rows.extend((target, "donor", c, w, v) for w, v in zip(WEIGHT_GRID, curve))
         curve_rows.extend((target, "self", target, w, v) for w, v in zip(WEIGHT_GRID, own))
 
-        def pooled_best(countries):
-            return best_weight(WEIGHT_GRID, np.mean([donor[c] for c in countries], axis=0))
-
         neighbors = nearest_countries(means, target, pool, k)
-        weight_rows += [
-            (target, "P0_global", 0.0, ""),
-            (target, "P1_country", 1.0, ""),
-            (target, "P2_common", pooled_best(pool), ""),
-            (target, "P3_oracle", best_weight(WEIGHT_GRID, own), ""),
-            (
-                target,
-                "P4_wvs",
-                pooled_best([iso3 for iso3, _ in neighbors]),
-                " ".join(f"{iso3}:{distance:.3f}" for iso3, distance in neighbors),
-            ),
-        ]
-        rng = seeded_rng("random", target, k)
-        for draw in range(N_RANDOM_REPEATS):
-            chosen = sorted(rng.choice(pool, size=k, replace=False))
-            draw_rows.append((target, draw, " ".join(chosen), pooled_best(chosen)))
+        fixed, draws = choose_weights(donor, own, neighbors, pool, seeded_rng("random", target, k), k)
+        neighbor_text = " ".join(f"{iso3}:{distance:.3f}" for iso3, distance in neighbors)
+        for method, weight in fixed.items():
+            detail = neighbor_text if method == "P4_wvs" else ""
+            nearest = neighbors[0][1] if method == "P4_wvs" else np.nan
+            weight_rows.append((target, method, weight, detail, nearest))
+        draw_rows.extend((target, draw, " ".join(chosen), weight) for draw, (chosen, weight) in enumerate(draws))
         print(f"검증 {number}/{len(targets)}: {target} 완료")
 
     curves = pd.DataFrame(curve_rows, columns=["target", "role", "country", "w", "ndcg"])
-    weights = pd.DataFrame(weight_rows, columns=["target", "method", "w", "detail"])
+    weights = pd.DataFrame(weight_rows, columns=["target", "method", "w", "detail", "nearest_distance"])
     draws = pd.DataFrame(draw_rows, columns=["target", "draw", "countries", "w"])
     curves.to_csv(TABLES_DIR / output_name("valid_curves.csv", n_early, k), index=False)
     weights.to_csv(TABLES_DIR / output_name("weights.csv", n_early, k), index=False)
@@ -196,25 +252,17 @@ def run_test(data, targets, countries, n_early, k):
     overlap = pd.DataFrame(overlap_rows, columns=["target", "repeat", "relevant_in_catalog"])
 
     # 방법마다 w는 검증 단계에서 정해졌다. 그 w의 시험 값을 반복 평균으로 가져온다
-    indexed = by_repeat.set_index(["target", "repeat", "w"])
-    method_rows = []
-    for target in targets:
-        fixed = weights[weights["target"] == target].set_index("method")["w"]
-        draw_weights = draws.loc[draws["target"] == target, "w"].to_numpy()
-        for method in METHODS:
-            per_repeat = []
-            for repeat in range(N_EARLY_REPEATS):
-                chosen = draw_weights if method == "P5_random" else [fixed[method]]
-                values = indexed.loc[[(target, repeat, w) for w in chosen], ["ndcg", "recall", "coverage"]]
-                per_repeat.append(values.mean().to_numpy())
-            per_repeat = np.array(per_repeat)
-            method_rows.append(
-                (target, method, fixed.get(method, np.nan), *per_repeat.mean(axis=0), per_repeat[:, 0].std(ddof=1))
-            )
-    results = pd.DataFrame(
-        method_rows,
-        columns=["target", "method", "w", "ndcg", "recall", "coverage", "ndcg_sd_over_repeats"],
-    )
+    results = pd.concat(
+        [
+            method_values(
+                by_repeat[by_repeat["target"] == target],
+                weights[weights["target"] == target].set_index("method")["w"].to_dict(),
+                draws.loc[draws["target"] == target, "w"].to_numpy(),
+            ).assign(target=target)
+            for target in targets
+        ],
+        ignore_index=True,
+    )[["target", "method", "w", "ndcg", "recall", "coverage", "ndcg_sd_over_repeats"]]
     results.to_csv(TABLES_DIR / output_name("test_by_country.csv", n_early, k), index=False)
 
     ndcg = results.pivot(index="target", columns="method", values="ndcg")
@@ -231,14 +279,15 @@ def run_test(data, targets, countries, n_early, k):
     summary.to_csv(TABLES_DIR / output_name("test_summary.csv", n_early, k), index=False)
 
     # 실패 분석 재료 (12절): WVS 비중이 공통보다 나빴던 나라를 따로 본다
-    neighbor_detail = weights[weights["method"] == "P4_wvs"].set_index("target")["detail"]
+    wvs_rows = weights[weights["method"] == "P4_wvs"].set_index("target")
     chosen = weights.pivot(index="target", columns="method", values="w")
     failure = pd.DataFrame(
         {
             "users": countries.set_index("iso3").loc[targets, "users"],
             "relevant_in_catalog": overlap.groupby("target")["relevant_in_catalog"].mean(),
-            "nearest_wvs_distance": neighbor_detail.map(lambda text: float(text.split()[0].split(":")[1])),
-            "wvs_neighbors": neighbor_detail,
+            "local_taste_share": pd.Series({target: local_taste_share(data, target) for target in targets}),
+            "nearest_wvs_distance": wvs_rows["nearest_distance"].astype(float),
+            "wvs_neighbors": wvs_rows["detail"],
             "w_P2": chosen["P2_common"],
             "w_P4": chosen["P4_wvs"],
             "w_P3_oracle": chosen["P3_oracle"],
