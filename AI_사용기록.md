@@ -28,3 +28,4 @@
 - Claude가 검토 의견을 과제 자료(`Midterm_CrossCulturalRecommendationSystems.pdf`, `Guideline.pdf`)와 데이터로 다시 확인한 뒤 설계 초안 2판에 반영. 반영 내역은 `report/실험설계_초안.md` 16절
 - MBID 없는 아티스트 중복 규모 측정 (전체 기록의 0.1%)
 - `check_data.py`의 평가 불가 사용자 기준을 설계 문서와 같은 10개로 수정
+- 팀 결정(H3 추가, 15절 기준값 확정)을 설계 문서와 `config.py`에 표시
