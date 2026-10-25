@@ -12,6 +12,7 @@ PROJECT_DIR = Path(__file__).resolve().parent.parent
 
 RAW_LASTFM_DIR = PROJECT_DIR / "data" / "raw" / "lastfm"
 RAW_WVS_DIR = PROJECT_DIR / "data" / "raw" / "wvs"
+WVS_CSV_PATH = RAW_WVS_DIR / "WV5_Data_csv_v20180912.csv"
 PROCESSED_DIR = PROJECT_DIR / "data" / "processed"
 TABLES_DIR = PROJECT_DIR / "results" / "tables"
 FIGURES_DIR = PROJECT_DIR / "results" / "figures"

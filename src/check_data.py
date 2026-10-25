@@ -6,17 +6,31 @@
 
 import pandas as pd
 
-from config import MIN_USERS_PER_COUNTRY, N_SHOWN_ARTISTS, RAW_WVS_DIR, TABLES_DIR
+from config import MIN_USERS_PER_COUNTRY, N_SHOWN_ARTISTS, TABLES_DIR, WVS_CSV_PATH
 from country_codes import country_name_to_iso3
 from load_lastfm import load_plays, load_profiles
+from load_wvs import load_wvs
 
 # 나라를 몇 명 기준으로 자를지 감을 잡으려고 여러 기준을 한 번에 본다
 USER_COUNT_THRESHOLDS = [50, 100, 200, 500, 1000]
 
 
-def find_wvs_files():
-    # .gitkeep 같은 숨김 파일은 데이터가 아니므로 뺀다
-    return [path for path in RAW_WVS_DIR.iterdir() if not path.name.startswith(".")]
+# 나라 간 가치관 거리 후보로 볼 WVS 종합 지표 (0~1). 코드북의 Welzel 지수
+WVS_INDEX_COLUMNS = ["SACSECVAL", "RESEMAVAL"]
+
+
+def wvs_country_table(country_user_counts):
+    """WVS 나라별 응답자 수, 지표 응답 비율, Last.fm 사용자 수를 한 표로."""
+    wvs = load_wvs(WVS_INDEX_COLUMNS)
+    by_country = wvs.groupby(["V2", "iso3"])
+    table = by_country.size().rename("wvs_respondents").reset_index()
+    for name in WVS_INDEX_COLUMNS:
+        valid_share = by_country[name].count() / by_country.size() * 100
+        table[f"{name}_valid_pct"] = valid_share.round(0).values
+    lastfm_users = country_user_counts.dropna(subset=["iso3"])[["iso3", "country", "users"]]
+    table = table.merge(lastfm_users, on="iso3", how="left")
+    table["users"] = table["users"].fillna(0).astype(int)
+    return table.sort_values("users", ascending=False)
 
 
 def main():
@@ -104,16 +118,35 @@ def main():
     manual_countries = country_user_counts[country_user_counts["iso_match"] == "manual"]
 
     # ---------- 6. WVS 연결 ----------
-    # WVS 파일 구조는 아직 확인 전이라, 파일을 직접 열어본 뒤에 연결 코드를 추가한다
-    wvs_files = find_wvs_files()
-    if wvs_files:
-        wvs_section = (
-            "WVS 파일이 있다: "
-            + ", ".join(path.name for path in wvs_files)
-            + "\n\n아직 파일 구조를 확인하지 않아서 연결 코드는 없다. 구조 확인 후 추가한다."
+    if WVS_CSV_PATH.exists():
+        print("WVS 읽는 중...")
+        wvs_table = wvs_country_table(country_user_counts)
+        wvs_table.to_csv(TABLES_DIR / "wvs_lastfm_common_countries.csv", index=False)
+        common_count_table = pd.DataFrame(
+            {
+                "Last.fm 최소 사용자 수": USER_COUNT_THRESHOLDS,
+                "WVS와 공통인 나라 수": [
+                    int((wvs_table["users"] >= threshold).sum())
+                    for threshold in USER_COUNT_THRESHOLDS
+                ],
+            }
+        )
+        unmapped = wvs_table[wvs_table["iso3"].isna()]
+        wvs_section = "\n".join(
+            [
+                f"WVS 나라 수: {len(wvs_table)}. "
+                f"ISO 코드로 못 바꾼 WVS 나라: {len(unmapped)}개. "
+                "음수 결측 코드는 빼고 응답 비율을 셌다.",
+                "",
+                common_count_table.to_markdown(index=False),
+                "",
+                "전체 목록 (`wvs_lastfm_common_countries.csv`)",
+                "",
+                wvs_table.to_markdown(index=False),
+            ]
         )
     else:
-        wvs_section = "`data/raw/wvs/`에 WVS 파일이 없어서 이 단계는 건너뛰었다."
+        wvs_section = f"`{WVS_CSV_PATH.name}`이 없어서 이 단계는 건너뛰었다."
 
     # ---------- 결과를 마크다운 한 파일로 ----------
     main_countries = country_user_counts[country_user_counts["users"] >= MIN_USERS_PER_COUNTRY]

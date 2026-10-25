@@ -16,3 +16,6 @@
 - 데이터 정리 규칙 제안 (아티스트 구분 기준, 중복 합치기) 및 `load_lastfm.py` 작성
 - 나라 이름 -> ISO 코드 변환 `country_codes.py` 작성. 자동 변환이 안 된 10개 나라는 수동 표로 지정
 - 데이터 확인 표를 만드는 `check_data.py` 작성 및 실행
+- WVS Wave 5 코드북에서 국가 목록(58개)을 확인하고 Last.fm 국가별 사용자 수와 대조 (CSV 확인 전 임시 결과)
+- WVS Wave 5 CSV를 직접 열어 형식 확인 (세미콜론 구분, 쉼표 소수점, 빈칸, 음수 결측 코드) 후 `load_wvs.py` 작성
+- `check_data.py`에 WVS-Last.fm 공통 나라 표 추가 및 재실행
