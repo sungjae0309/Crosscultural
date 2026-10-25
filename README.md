@@ -53,11 +53,15 @@ bi-crosscultural-rec/
 │   ├── metrics.py        추천 목록 만들기와 평가 지표 (NDCG, Recall, 커버리지)
 │   ├── popularity.py     인기 점수 실험에 같이 쓰는 자료 준비와 평가
 │   ├── stats.py          나라 단위 비교 통계 (부트스트랩, Wilcoxon, Holm)
-│   └── run_h1.py         H1 실험 (--stage valid, --stage test)
+│   ├── seeds.py          무작위 단계의 시드 만들기
+│   ├── wvs_distance.py   WVS 가치관으로 나라 사이 거리 재기
+│   ├── run_h1.py         H1 실험 (--stage valid, --stage test)
+│   └── run_h2.py         H2 실험 (--stage valid, --stage test)
 ├── tests/
 │   ├── test_metrics.py   평가 지표 확인
 │   ├── test_split.py     사용자 나누기 규칙 확인 (가짜 데이터)
-│   └── test_popularity.py 인기 점수, 비중 고르기, 통계 확인
+│   ├── test_popularity.py 인기 점수, 행렬 평가, 비중 고르기, 통계 확인
+│   └── test_h2.py        H2 조건(빼는 나라, 초기 사용자), WVS 거리 확인
 ├── results/
 │   ├── tables/         결과 표 (data_check.md에 데이터 확인 결과)
 │   └── figures/        결과 그림
@@ -130,6 +134,7 @@ bi-crosscultural-rec/
     python tests/test_metrics.py
     python tests/test_split.py
     python tests/test_popularity.py
+    python tests/test_h2.py
     ```
 
 11. H1 실험 (각 1분쯤). 검증 단계를 먼저 돌려야 시험 단계가 돈다.
@@ -137,6 +142,13 @@ bi-crosscultural-rec/
     ```bash
     python src/run_h1.py --stage valid
     python src/run_h1.py --stage test
+    ```
+
+12. H2 실험. 검증 단계가 20분쯤 걸린다.
+
+    ```bash
+    python src/run_h2.py --stage valid
+    python src/run_h2.py --stage test
     ```
 
 ## 데이터
