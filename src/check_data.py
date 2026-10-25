@@ -6,7 +6,13 @@
 
 import pandas as pd
 
-from config import MIN_USERS_PER_COUNTRY, N_SHOWN_ARTISTS, TABLES_DIR, WVS_CSV_PATH
+from config import (
+    EXCLUDED_ISO3,
+    MIN_USERS_PER_COUNTRY,
+    N_SHOWN_ARTISTS,
+    TABLES_DIR,
+    WVS_CSV_PATH,
+)
 from country_codes import country_name_to_iso3
 from load_lastfm import load_plays, load_profiles
 from load_wvs import load_wvs
@@ -49,6 +55,11 @@ def main():
     users["iso3"] = users["country"].map(lambda name: iso_results[name][0])
     users["iso_match"] = users["country"].map(lambda name: iso_results[name][1])
 
+    # 실제 거주지로 보기 어려운 국가값은 이후 모든 표에서 뺀다
+    is_excluded = users["iso3"].isin(EXCLUDED_ISO3)
+    excluded_users = users[is_excluded]
+    users = users[~is_excluded]
+
     users_with_country = users[users["country"] != ""]
     users_with_iso = users_with_country[users_with_country["iso3"].notna()]
 
@@ -57,7 +68,9 @@ def main():
         [
             ("프로필에 있는 사용자", len(profiles)),
             ("재생 기록이 있는 사용자", plays["user_id"].nunique()),
-            ("프로필과 재생 기록이 둘 다 있는 사용자", len(users)),
+            ("프로필과 재생 기록이 둘 다 있는 사용자", len(users) + len(excluded_users)),
+            ("그중 제외한 국가값의 사용자", len(excluded_users)),
+            ("제외 후 남은 사용자", len(users)),
             ("그중 국가 정보가 있는 사용자", len(users_with_country)),
             ("그중 ISO 나라 코드로 바뀐 사용자", len(users_with_iso)),
             ("나라 수 (Last.fm 표기 기준)", users_with_country["country"].nunique()),
@@ -116,6 +129,10 @@ def main():
     # ---------- 5. ISO 코드로 못 바꾼 나라 ----------
     unmatched_countries = country_user_counts[country_user_counts["iso3"].isna()]
     manual_countries = country_user_counts[country_user_counts["iso_match"] == "manual"]
+    excluded_counts = (
+        excluded_users.groupby(["country", "iso3"]).size().rename("users").reset_index()
+        .sort_values("users", ascending=False)
+    )
 
     # ---------- 6. WVS 연결 ----------
     if WVS_CSV_PATH.exists():
@@ -179,6 +196,11 @@ def main():
         "",
         "### ISO 코드로 못 바꾼 나라",
         unmatched_countries.to_markdown(index=False) if len(unmatched_countries) else "없음",
+        "",
+        "### 제외한 국가값",
+        "실제 거주지로 보기 어려워 뺐다. 목록은 `config.EXCLUDED_ISO3`. 위 표들은 모두 제외 후 숫자다.",
+        "",
+        excluded_counts.to_markdown(index=False) if len(excluded_counts) else "없음",
         "",
         "## 6. WVS Wave 5와 공통 나라",
         wvs_section,

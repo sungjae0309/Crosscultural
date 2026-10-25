@@ -56,7 +56,6 @@ Taiwan,TWN,auto,429,45.0
 Malaysia,MYS,auto,417,46.0
 Hong Kong,HKG,auto,372,43.0
 Iceland,ISL,auto,368,48.0
-Antarctica,ATA,auto,365,49.0
 Costa Rica,CRI,auto,325,49.0
 Kazakhstan,KAZ,auto,317,43.0
 Macedonia,MKD,manual,290,48.0
@@ -71,13 +70,10 @@ Guatemala,GTM,auto,176,49.0
 Egypt,EGY,auto,170,47.0
 Viet Nam,VNM,auto,136,47.0
 Andorra,AND,auto,130,49.0
-United States Minor Outlying Islands,UMI,auto,130,49.0
 Jamaica,JAM,auto,128,48.0
-Holy See (Vatican City State),VAT,auto,122,50.0
 Luxembourg,LUX,auto,110,49.0
 United Arab Emirates,ARE,auto,102,49.5
 Cyprus,CYP,auto,100,48.0
-Cocos (Keeling) Islands,CCK,auto,100,49.0
 Christmas Island,CXR,auto,95,49.0
 Dominican Republic,DOM,auto,92,48.0
 Bangladesh,BGD,auto,89,47.0
@@ -87,8 +83,8 @@ Morocco,MAR,auto,82,46.5
 Paraguay,PRY,auto,82,49.0
 Azerbaijan,AZE,auto,78,48.0
 Saudi Arabia,SAU,auto,76,46.0
-Afghanistan,AFG,auto,74,47.0
 El Salvador,SLV,auto,74,49.0
+Afghanistan,AFG,auto,74,47.0
 Bolivia,BOL,auto,72,48.5
 Panama,PAN,auto,69,48.0
 Montenegro,MNE,auto,67,48.0
@@ -105,40 +101,40 @@ Honduras,HND,auto,51,47.0
 Albania,ALB,auto,50,48.0
 Reunion,REU,manual,49,49.0
 Armenia,ARM,auto,47,46.0
-Faroe Islands,FRO,auto,46,49.0
 Trinidad and Tobago,TTO,auto,46,49.0
 "Palestinian Territory, Occupied",PSE,manual,46,49.0
-Djibouti,DJI,auto,43,48.0
+Faroe Islands,FRO,auto,46,49.0
 Fiji,FJI,auto,43,49.0
+Djibouti,DJI,auto,43,48.0
 Sri Lanka,LKA,auto,40,49.0
 Algeria,DZA,auto,40,48.0
 Greenland,GRL,auto,39,50.0
 "Virgin Islands, British",VGB,auto,38,47.5
-"Micronesia, Federated States of",FSM,auto,36,49.0
 Cambodia,KHM,auto,36,50.0
+"Micronesia, Federated States of",FSM,auto,36,49.0
 "Virgin Islands, U.s.",VIR,auto,35,49.0
-Mauritius,MUS,auto,34,49.5
 Aruba,ABW,auto,34,49.0
+Mauritius,MUS,auto,34,49.5
 Bahamas,BHS,auto,34,49.0
-Nepal,NPL,auto,33,49.0
 British Indian Ocean Territory,IOT,auto,33,48.0
 Cote D'Ivoire,CIV,manual,33,50.0
+Nepal,NPL,auto,33,49.0
 Antigua and Barbuda,ATG,auto,32,49.0
-Wallis and Futuna,WLF,auto,31,49.0
 Angola,AGO,auto,31,47.0
+Uganda,UGA,auto,31,48.0
+Wallis and Futuna,WLF,auto,31,49.0
 Bermuda,BMU,auto,31,47.0
 Liechtenstein,LIE,auto,31,49.0
-Uganda,UGA,auto,31,48.0
-Svalbard and Jan Mayen,SJM,auto,30,48.0
 Qatar,QAT,auto,30,48.0
-Macao,MAC,auto,30,49.0
+Svalbard and Jan Mayen,SJM,auto,30,48.0
 French Southern Territories,ATF,auto,30,49.0
-Burkina Faso,BFA,auto,29,49.0
-Nicaragua,NIC,auto,29,48.0
+Macao,MAC,auto,30,49.0
+"Korea, Democratic People's Republic of",PRK,auto,29,49.0
 Pitcairn,PCN,auto,29,47.0
 Bahrain,BHR,auto,29,47.0
-"Korea, Democratic People's Republic of",PRK,auto,29,49.0
 Papua New Guinea,PNG,auto,29,48.0
+Burkina Faso,BFA,auto,29,49.0
+Nicaragua,NIC,auto,29,48.0
 Mongolia,MNG,auto,29,48.0
 Jordan,JOR,auto,28,47.5
 Tuvalu,TUV,auto,27,49.0
@@ -146,94 +142,94 @@ Western Sahara,ESH,auto,27,49.0
 Guadeloupe,GLP,auto,26,48.0
 Brunei Darussalam,BRN,auto,25,47.0
 Madagascar,MDG,auto,25,45.0
-Cayman Islands,CYM,auto,25,49.0
 Guam,GUM,auto,25,48.0
+Cayman Islands,CYM,auto,25,49.0
 Kenya,KEN,auto,24,50.0
-Bhutan,BTN,auto,23,49.0
-Monaco,MCO,auto,23,48.0
 Saint Vincent and the Grenadines,VCT,auto,23,48.0
+Monaco,MCO,auto,23,48.0
+Bhutan,BTN,auto,23,49.0
 Martinique,MTQ,auto,23,49.0
-Cook Islands,COK,auto,22,49.0
-Seychelles,SYC,auto,22,49.0
-Cape Verde,CPV,manual,22,50.5
-American Samoa,ASM,auto,22,49.5
-Bouvet Island,BVT,auto,22,49.0
 Syrian Arab Republic,SYR,auto,22,43.5
+Seychelles,SYC,auto,22,49.0
 Botswana,BWA,auto,22,47.0
-"Congo, the Democratic Republic of the",COD,auto,21,49.0
+American Samoa,ASM,auto,22,49.5
+Cook Islands,COK,auto,22,49.0
+Bouvet Island,BVT,auto,22,49.0
+Cape Verde,CPV,manual,22,50.5
+Maldives,MDV,auto,21,46.0
 Ghana,GHA,auto,21,48.0
 Kuwait,KWT,auto,21,48.0
-Maldives,MDV,auto,21,46.0
+"Congo, the Democratic Republic of the",COD,auto,21,49.0
 Kiribati,KIR,auto,20,49.5
-Nigeria,NGA,auto,20,46.5
 French Polynesia,PYF,auto,20,49.0
+Nigeria,NGA,auto,20,46.5
 Vanuatu,VUT,auto,20,49.0
-Haiti,HTI,auto,19,48.0
 Mozambique,MOZ,auto,19,45.0
+Haiti,HTI,auto,19,48.0
 Sao Tome and Principe,STP,auto,18,48.0
 Chad,TCD,auto,18,49.5
-Ethiopia,ETH,auto,17,47.0
 Somalia,SOM,auto,17,49.0
-Netherlands Antilles,ANT,manual,17,49.0
 Norfolk Island,NFK,auto,17,50.0
+Netherlands Antilles,ANT,manual,17,49.0
+Ethiopia,ETH,auto,17,47.0
 Saint Helena,SHN,manual,16,47.0
 Gibraltar,GIB,auto,16,47.5
+Oman,OMN,auto,15,50.0
 Niger,NER,auto,15,47.0
 Yemen,YEM,auto,15,49.0
-Oman,OMN,auto,15,50.0
-Tajikistan,TJK,auto,14,47.5
-Falkland Islands (Malvinas),FLK,auto,14,48.0
-Togo,TGO,auto,14,51.0
-Libyan Arab Jamahiriya,LBY,manual,14,46.5
-Samoa,WSM,auto,14,47.0
-Nauru,NRU,auto,14,47.0
 Swaziland,SWZ,manual,14,49.0
-Congo,COG,auto,14,48.5
+Tajikistan,TJK,auto,14,47.5
+Togo,TGO,auto,14,51.0
 Kyrgyzstan,KGZ,auto,14,48.0
+Samoa,WSM,auto,14,47.0
+Falkland Islands (Malvinas),FLK,auto,14,48.0
+Libyan Arab Jamahiriya,LBY,manual,14,46.5
+Nauru,NRU,auto,14,47.0
+Congo,COG,auto,14,48.5
 Iraq,IRQ,auto,13,48.0
-Zambia,ZMB,auto,13,47.0
-Turkmenistan,TKM,auto,13,47.0
-Montserrat,MSR,auto,13,49.0
-Sierra Leone,SLE,auto,13,50.0
-Turks and Caicos Islands,TCA,auto,13,50.0
 Anguilla,AIA,auto,13,47.0
+Sierra Leone,SLE,auto,13,50.0
+Montserrat,MSR,auto,13,49.0
+Turks and Caicos Islands,TCA,auto,13,50.0
+Turkmenistan,TKM,auto,13,47.0
+Zambia,ZMB,auto,13,47.0
 Tokelau,TKL,auto,12,49.0
-Lao People's Democratic Republic,LAO,auto,12,46.5
 Northern Mariana Islands,MNP,auto,12,49.0
-New Caledonia,NCL,auto,11,47.0
-Lesotho,LSO,auto,11,49.0
+Lao People's Democratic Republic,LAO,auto,12,46.5
 Dominica,DMA,auto,11,49.0
-Saint Pierre and Miquelon,SPM,auto,11,48.0
+New Caledonia,NCL,auto,11,47.0
 Timor-Leste,TLS,auto,11,48.0
+Lesotho,LSO,auto,11,49.0
+Saint Pierre and Miquelon,SPM,auto,11,48.0
 "Tanzania, United Republic of",TZA,auto,11,50.0
-Equatorial Guinea,GNQ,auto,10,49.5
-Burundi,BDI,auto,10,49.0
 Solomon Islands,SLB,auto,10,48.5
 Saint Kitts and Nevis,KNA,auto,10,47.5
+Burundi,BDI,auto,10,49.0
+Equatorial Guinea,GNQ,auto,10,49.5
 Senegal,SEN,auto,9,45.0
-Cameroon,CMR,auto,9,48.0
 San Marino,SMR,auto,9,48.0
+Cameroon,CMR,auto,9,48.0
 Namibia,NAM,auto,9,49.0
-Mayotte,MYT,auto,8,49.0
-Comoros,COM,auto,8,46.0
 Tonga,TON,auto,8,48.5
-Rwanda,RWA,auto,8,43.5
+Mayotte,MYT,auto,8,49.0
 Gabon,GAB,auto,8,47.0
+Comoros,COM,auto,8,46.0
+Rwanda,RWA,auto,8,43.5
 Saint Lucia,LCA,auto,8,55.0
-Mali,MLI,auto,7,49.0
-Myanmar,MMR,auto,7,48.0
 Grenada,GRD,auto,7,48.0
+Myanmar,MMR,auto,7,48.0
+Mali,MLI,auto,7,49.0
 Belize,BLZ,auto,6,47.5
 Eritrea,ERI,auto,6,57.0
 Malawi,MWI,auto,6,48.5
+Suriname,SUR,auto,5,50.0
+Sudan,SDN,auto,5,48.0
 Guinea-Bissau,GNB,auto,5,56.0
 Guyana,GUY,auto,5,50.0
-Sudan,SDN,auto,5,48.0
-Suriname,SUR,auto,5,50.0
 Mauritania,MRT,auto,5,40.0
 Central African Republic,CAF,auto,5,43.0
-French Guiana,GUF,auto,4,48.5
 Marshall Islands,MHL,auto,4,41.5
+French Guiana,GUF,auto,4,48.5
 Gambia,GMB,auto,3,50.0
 Liberia,LBR,auto,3,48.0
 Benin,BEN,auto,3,49.0

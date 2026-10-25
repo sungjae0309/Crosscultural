@@ -25,6 +25,15 @@ RANDOM_SEED = 42
 # 사용자가 이보다 적은 나라는 나라별 비교에서 뺀다
 MIN_USERS_PER_COUNTRY = 100
 
+# 실제 거주지로 보기 어려운 Last.fm 국가값. 이 나라 사용자는 처음부터 뺀다
+# (가입 때 장난으로 고른 값으로 보임. 합쳐서 717명, 전체의 0.2%)
+EXCLUDED_ISO3 = {
+    "ATA": "Antarctica",
+    "VAT": "Holy See (Vatican City State)",
+    "CCK": "Cocos (Keeling) Islands",
+    "UMI": "United States Minor Outlying Islands",
+}
+
 # ---------- 사용자 나누기 (초안) ----------
 # 사용자 단위로 학습용 / 검증용 / 시험용으로 나눈다 (합이 1이어야 함)
 TRAIN_USER_RATIO = 0.70
