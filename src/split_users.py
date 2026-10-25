@@ -16,7 +16,6 @@
   이것도 사용자마다 RANDOM_SEED와 user_id로 시드를 따로 만든다.
 """
 
-import numpy as np
 import pandas as pd
 
 from config import (
@@ -25,20 +24,14 @@ from config import (
     MIN_USERS_PER_COUNTRY,
     N_SHOWN_ARTISTS,
     PROCESSED_DIR,
-    RANDOM_SEED,
     TABLES_DIR,
     TEST_USER_RATIO,
     VALID_USER_RATIO,
 )
 from load_lastfm import load_plays, load_profiles
 from load_wvs import load_wvs
+from seeds import seeded_rng
 from users import build_user_table
-
-
-def _rng(*keys):
-    """RANDOM_SEED와 문자열 키로 만든 난수 생성기. 같은 키면 항상 같은 결과."""
-    entropy = [RANDOM_SEED] + [int.from_bytes(key.encode("utf-8"), "big") for key in keys]
-    return np.random.default_rng(np.random.SeedSequence(entropy))
 
 
 def split_users(users):
@@ -48,7 +41,7 @@ def split_users(users):
 
     can_evaluate = users["n_artists"] >= MIN_ARTISTS_EVAL_USER
     for iso3, group in users[can_evaluate].groupby("iso3", sort=True):
-        shuffled = group.index.to_numpy()[_rng("split", iso3).permutation(len(group))]
+        shuffled = group.index.to_numpy()[seeded_rng("split", iso3).permutation(len(group))]
         n_valid = round(len(group) * VALID_USER_RATIO)
         n_test = round(len(group) * TEST_USER_RATIO)
         users.loc[shuffled[:n_valid], "split"] = "valid"
@@ -67,7 +60,7 @@ def pick_shown_artists(plays, eval_user_ids):
     )
     shown_rows = []
     for user_id, artist_ids in eval_plays.groupby("user_id", sort=True)["artist_id"]:
-        picked = _rng("shown", user_id).choice(
+        picked = seeded_rng("shown", user_id).choice(
             artist_ids.to_numpy(), size=N_SHOWN_ARTISTS, replace=False
         )
         shown_rows.extend((user_id, artist_id) for artist_id in sorted(picked))

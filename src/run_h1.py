@@ -61,16 +61,14 @@ def run_valid(data, countries, measure):
     all_countries = list(data.country_listeners)
     global_share = popularity_share(data, all_countries, measure)
     tie_listeners = listener_counts(data, all_countries)
-    valid_users = data.eval_users[data.eval_users["split"] == "valid"]
 
     rows = []
     for country in countries.itertuples():
         country_share = popularity_share(data, [country.iso3], measure)
-        user_ids = valid_users.loc[valid_users["iso3"] == country.iso3, "user_id"]
         for weight in WEIGHT_GRID:
             scores = mixed_scores(global_share, country_share, weight)
-            ndcg, recall, _ = evaluate_shared_scores(data, scores, tie_listeners, user_ids, TOP_K)
-            rows.append((country.iso3, weight, ndcg.mean(), recall.mean(), len(user_ids)))
+            ndcg, recall, _ = evaluate_shared_scores(data, scores, tie_listeners, country.iso3, TOP_K)
+            rows.append((country.iso3, weight, ndcg.mean(), recall.mean(), len(ndcg)))
         print(f"검증: {country.iso3} 완료")
     curves = pd.DataFrame(rows, columns=["iso3", "w", "ndcg", "recall", "n_users"])
     curves.to_csv(TABLES_DIR / output_name("valid_curves.csv", measure), index=False)
@@ -132,7 +130,6 @@ def run_test(data, countries, measure):
     all_countries = list(data.country_listeners)
     global_share = popularity_share(data, all_countries, measure)
     tie_listeners = listener_counts(data, all_countries)
-    test_users = data.eval_users[data.eval_users["split"] == "test"]
 
     methods = {
         "P0_global": lambda iso3: 0.0,
@@ -144,14 +141,13 @@ def run_test(data, countries, measure):
     rows, recommended, overlap_rows = [], {name: set() for name in methods}, []
     for country in countries.itertuples():
         country_share = popularity_share(data, [country.iso3], measure)
-        user_ids = test_users.loc[test_users["iso3"] == country.iso3, "user_id"]
-        overlap_rows.append((country.iso3, relevant_in_catalog_share(data, user_ids).mean()))
+        overlap_rows.append((country.iso3, relevant_in_catalog_share(data, country.iso3).mean()))
         for name, weight_of in methods.items():
             weight = weight_of(country.iso3)
             scores = mixed_scores(global_share, country_share, weight)
-            ndcg, recall, items = evaluate_shared_scores(data, scores, tie_listeners, user_ids, TOP_K)
+            ndcg, recall, items = evaluate_shared_scores(data, scores, tie_listeners, country.iso3, TOP_K)
             recommended[name].update(items)
-            rows.append((country.iso3, name, weight, ndcg.mean(), recall.mean(), len(user_ids)))
+            rows.append((country.iso3, name, weight, ndcg.mean(), recall.mean(), len(ndcg)))
     results = pd.DataFrame(rows, columns=["iso3", "method", "w", "ndcg", "recall", "n_users"])
     results.to_csv(TABLES_DIR / output_name("test_by_country.csv", measure), index=False)
     overlap = pd.DataFrame(overlap_rows, columns=["iso3", "relevant_in_catalog"])
@@ -159,7 +155,7 @@ def run_test(data, countries, measure):
 
     by_method = results.groupby("method").agg(ndcg=("ndcg", "mean"), recall=("recall", "mean"))
     by_method["coverage"] = [
-        item_coverage([list(recommended[name])], len(data.catalog)) for name in by_method.index
+        item_coverage([list(recommended[name])], len(data.universe)) for name in by_method.index
     ]
 
     ndcg = results.pivot(index="iso3", columns="method", values="ndcg")
