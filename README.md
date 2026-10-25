@@ -19,6 +19,8 @@
 - [x] 실험 설계 확정 (`report/실험설계.md`)
 - [x] 사용자 나누기와 평가 코드
 - [ ] 모델 실험
+  - [x] H1 검증 단계 (비중 고르기)
+  - [ ] H1 시험 단계 (코드 검토 후)
 - [ ] 보고서
 
 ## 용어 정리
@@ -47,10 +49,14 @@ bi-crosscultural-rec/
 │   ├── users.py          사용자 단위 표 (나라 코드, 제외 국가값 처리)
 │   ├── check_data.py     데이터 확인 표를 만드는 코드
 │   ├── split_users.py    사용자를 학습/검증/시험으로 나누고 보여줄 아티스트 고르기
-│   └── metrics.py        추천 목록 만들기와 평가 지표 (NDCG, Recall, 커버리지)
+│   ├── metrics.py        추천 목록 만들기와 평가 지표 (NDCG, Recall, 커버리지)
+│   ├── popularity.py     인기 점수 실험에 같이 쓰는 자료 준비와 평가
+│   ├── stats.py          나라 단위 비교 통계 (부트스트랩, Wilcoxon, Holm)
+│   └── run_h1.py         H1 실험 (--stage valid, --stage test)
 ├── tests/
 │   ├── test_metrics.py   평가 지표 확인
-│   └── test_split.py     사용자 나누기 규칙 확인 (가짜 데이터)
+│   ├── test_split.py     사용자 나누기 규칙 확인 (가짜 데이터)
+│   └── test_popularity.py 인기 점수, 비중 고르기, 통계 확인
 ├── results/
 │   ├── tables/         결과 표 (data_check.md에 데이터 확인 결과)
 │   └── figures/        결과 그림
@@ -122,6 +128,14 @@ bi-crosscultural-rec/
     ```bash
     python tests/test_metrics.py
     python tests/test_split.py
+    python tests/test_popularity.py
+    ```
+
+11. H1 실험 (각 1분쯤). 검증 단계를 먼저 돌려야 시험 단계가 돈다.
+
+    ```bash
+    python src/run_h1.py --stage valid
+    python src/run_h1.py --stage test
     ```
 
 ## 데이터
