@@ -162,6 +162,30 @@ def main():
     else:
         wvs_section = f"`{WVS_CSV_PATH.name}`이 없어서 이 단계는 건너뛰었다."
 
+    # ---------- 7. MBID가 없어서 따로 남은 아티스트 ----------
+    # 이름만 있는 기록 중, 그 이름이 MBID 하나와만 짝지어지는 경우를 센다 (대소문자, 앞뒤 공백 무시)
+    # 이런 기록은 같은 아티스트가 두 ID로 나뉘었을 가능성이 높다. 규모가 작으면 합치지 않고 한계로 적는다
+    has_mbid = ~plays["artist_id"].str.startswith("name:")
+    name_key = plays["artist_name"].str.strip().str.lower()
+    mbids_per_name = plays.loc[has_mbid].groupby(name_key[has_mbid])["artist_id"].nunique()
+    name_only = plays.loc[~has_mbid]
+    name_only_key = name_key[~has_mbid]
+    one_mbid = name_only_key.isin(mbids_per_name[mbids_per_name == 1].index)
+    many_mbids = name_only_key.isin(mbids_per_name[mbids_per_name > 1].index)
+    mbid_split_table = pd.DataFrame(
+        [
+            ("전체 사용자-아티스트 기록", len(plays)),
+            ("MBID 없이 이름만 있는 기록", len(name_only)),
+            ("그중 이름이 MBID 하나와 맞는 기록", int(one_mbid.sum())),
+            ("그 기록의 아티스트 수", name_only.loc[one_mbid, "artist_id"].nunique()),
+            ("그중 이름이 MBID 여러 개와 맞는 기록", int(many_mbids.sum())),
+        ],
+        columns=["항목", "값"],
+    )
+    mbid_split_table["전체 기록 대비 %"] = (mbid_split_table["값"] / len(plays) * 100).round(2)
+    mbid_split_table["전체 기록 대비 %"] = mbid_split_table["전체 기록 대비 %"].astype(str)
+    mbid_split_table.loc[mbid_split_table["항목"] == "그 기록의 아티스트 수", "전체 기록 대비 %"] = "-"
+
     # ---------- 결과를 마크다운 한 파일로 ----------
     main_countries = country_user_counts[country_user_counts["users"] >= MIN_USERS_PER_COUNTRY]
     report_lines = [
@@ -201,6 +225,11 @@ def main():
         "",
         "## 6. WVS Wave 5와 공통 나라",
         wvs_section,
+        "",
+        "## 7. MBID가 없어서 따로 남은 아티스트",
+        "제외한 국가값 사용자를 포함한 전체 재생 기록 기준.",
+        "",
+        mbid_split_table.to_markdown(index=False),
         "",
     ]
     report_path = TABLES_DIR / "data_check.md"
