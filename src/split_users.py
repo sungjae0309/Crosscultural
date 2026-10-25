@@ -13,6 +13,7 @@
 - 무작위 시드는 나라마다 RANDOM_SEED와 나라 코드로 따로 만든다.
   그래서 다른 나라가 추가되거나 빠져도 한 나라의 나누기 결과는 바뀌지 않는다.
 - 보여줄 아티스트는 사용자마다 N_SHOWN_ARTISTS개를 무작위로 고른다. 나머지가 정답이다.
+  이것도 사용자마다 RANDOM_SEED와 user_id로 시드를 따로 만든다.
 """
 
 import numpy as np
@@ -56,16 +57,21 @@ def split_users(users):
 
 
 def pick_shown_artists(plays, eval_user_ids):
-    """평가 사용자마다 보여줄 아티스트 N_SHOWN_ARTISTS개를 무작위로 고른다."""
+    """평가 사용자마다 보여줄 아티스트 N_SHOWN_ARTISTS개를 무작위로 고른다.
+
+    사용자마다 시드를 따로 만들어서, 다른 사용자가 추가되거나 빠져도 결과가 바뀌지 않는다.
+    """
     eval_plays = (
         plays.loc[plays["user_id"].isin(eval_user_ids), ["user_id", "artist_id"]]
         .sort_values(["user_id", "artist_id"])
-        .reset_index(drop=True)
     )
-    eval_plays["random_key"] = _rng("shown").random(len(eval_plays))
-    eval_plays["pick_order"] = eval_plays.groupby("user_id")["random_key"].rank(method="first")
-    shown = eval_plays[eval_plays["pick_order"] <= N_SHOWN_ARTISTS]
-    return shown[["user_id", "artist_id"]].reset_index(drop=True)
+    shown_rows = []
+    for user_id, artist_ids in eval_plays.groupby("user_id", sort=True)["artist_id"]:
+        picked = _rng("shown", user_id).choice(
+            artist_ids.to_numpy(), size=N_SHOWN_ARTISTS, replace=False
+        )
+        shown_rows.extend((user_id, artist_id) for artist_id in sorted(picked))
+    return pd.DataFrame(shown_rows, columns=["user_id", "artist_id"])
 
 
 def count_table(users, wvs_iso3):

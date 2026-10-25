@@ -39,3 +39,5 @@
 - `metrics.py` 작성: 동점 규칙을 지키는 추천 목록 만들기, NDCG@K, Recall@K, 아이템 커버리지
 - `tests/test_metrics.py` 작성: 과제 자료 예시(NDCG@3 = 0.920)와 동점, 제외 처리 확인
 - 사용자 표 만드는 부분을 `users.py`로 빼서 `check_data.py`와 같이 쓰게 함. 데이터 확인 표가 바뀌지 않은 것 확인
+- ChatGPT 코드 검토 1회: 버그와 정보 누수는 없다는 의견. 제안(입력 검사, 추천 중복 검사, 사용자별 시드, 테스트 보강)을 Claude가 확인 후 모두 반영
+- `tests/test_split.py` 추가, `tests/test_metrics.py`에 경계 사례와 전체 정렬 대조 테스트 추가

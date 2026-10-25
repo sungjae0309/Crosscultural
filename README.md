@@ -49,7 +49,8 @@ bi-crosscultural-rec/
 │   ├── split_users.py    사용자를 학습/검증/시험으로 나누고 보여줄 아티스트 고르기
 │   └── metrics.py        추천 목록 만들기와 평가 지표 (NDCG, Recall, 커버리지)
 ├── tests/
-│   └── test_metrics.py   평가 지표 확인 (python tests/test_metrics.py)
+│   ├── test_metrics.py   평가 지표 확인
+│   └── test_split.py     사용자 나누기 규칙 확인 (가짜 데이터)
 ├── results/
 │   ├── tables/         결과 표 (data_check.md에 데이터 확인 결과)
 │   └── figures/        결과 그림
@@ -116,10 +117,11 @@ bi-crosscultural-rec/
 
    나눈 결과는 `data/processed/`에, 나라별 사용자 수는 `results/tables/split_counts.md`에 생긴다. 시드가 고정되어 있어서 몇 번을 돌려도 같은 결과가 나온다.
 
-10. 평가 지표 확인
+10. 테스트 (원본 데이터 없이도 돌아감)
 
     ```bash
     python tests/test_metrics.py
+    python tests/test_split.py
     ```
 
 ## 데이터

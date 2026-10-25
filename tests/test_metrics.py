@@ -56,6 +56,51 @@ def test_item_coverage():
     assert item_coverage([[0, 1], [1, 2]], catalog_size=10) == 0.3
 
 
+def test_top_k_edge_cases():
+    scores = [0.3, 0.2, 0.1]
+    listeners = [1, 1, 1]
+    # 후보보다 k가 크면 있는 만큼만
+    assert list(top_k(scores, listeners, exclude=[], k=10)) == [0, 1, 2]
+    # 전부 빼면 빈 목록
+    assert list(top_k(scores, listeners, exclude=[0, 1, 2], k=2)) == []
+    assert list(top_k(scores, listeners, exclude=[], k=0)) == []
+    assert list(top_k([], [], exclude=[], k=3)) == []
+
+
+def test_top_k_matches_full_sort():
+    # 동점이 많은 무작위 점수에서 전체 정렬 결과와 같은지
+    import numpy as np
+
+    rng = np.random.default_rng(0)
+    for _ in range(200):
+        n = int(rng.integers(1, 40))
+        scores = rng.integers(0, 4, n).astype(float)
+        listeners = rng.integers(0, 3, n)
+        exclude = set(rng.choice(n, size=int(rng.integers(0, n + 1)), replace=False).tolist())
+        k = int(rng.integers(0, n + 2))
+        full = sorted(range(n), key=lambda i: (-scores[i], -listeners[i], i))
+        expected = [i for i in full if i not in exclude][:k]
+        assert list(top_k(scores, listeners, exclude, k)) == expected
+
+
+def _raises(function, *args):
+    try:
+        function(*args)
+    except ValueError:
+        return True
+    return False
+
+
+def test_invalid_inputs():
+    assert _raises(top_k, [0.1, float("nan")], [1, 1], [], 1)
+    assert _raises(top_k, [0.1, 0.2], [1], [], 1)
+    assert _raises(top_k, [0.1], [1], [], -1)
+    assert _raises(recall_at_k, [1, 1], {1}, 2)
+    assert _raises(ndcg_at_k, [1, 1], {1}, 2)
+    assert _raises(item_coverage, [[0]], 0)
+    assert _raises(item_coverage, [[5]], 3)
+
+
 if __name__ == "__main__":
     tests = [value for name, value in sorted(globals().items()) if name.startswith("test_")]
     for test in tests:
