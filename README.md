@@ -13,8 +13,9 @@
 ## 지금 진행 상황
 
 - [x] 폴더, 가상환경, 패키지 세팅
-- [ ] Last.fm 360K 받기
-- [ ] 데이터 확인 (나라별 사용자 수, WVS와 겹치는 나라)
+- [x] Last.fm 360K 받기
+- [x] 데이터 확인: Last.fm 쪽 (나라별 사용자 수, 사용자당 아티스트 수)
+- [ ] 데이터 확인: WVS와 겹치는 나라 (WVS 파일 받은 뒤)
 - [ ] 모델 실험
 - [ ] 보고서
 
@@ -37,9 +38,12 @@ bi-crosscultural-rec/
 │   ├── raw/wvs/        WVS 원본 (직접 받아서 넣기, git에 안 올라감)
 │   └── processed/      코드가 만든 중간 파일 (git에 안 올라감)
 ├── src/
-│   └── config.py       경로와 숫자 기준값(K, 보여줄 아티스트 수 등)을 모아둔 곳
+│   ├── config.py         경로와 숫자 기준값(K, 보여줄 아티스트 수 등)을 모아둔 곳
+│   ├── load_lastfm.py    Last.fm 원본을 읽고 정리하는 함수
+│   ├── country_codes.py  나라 이름을 ISO 세 글자 코드(예: KOR)로 바꾸는 함수
+│   └── check_data.py     데이터 확인 표를 만드는 코드
 ├── results/
-│   ├── tables/         결과 표
+│   ├── tables/         결과 표 (data_check.md에 데이터 확인 결과)
 │   └── figures/        결과 그림
 ├── report/             보고서에 넣을 자료
 ├── requirements.txt    필요한 파이썬 패키지 목록
@@ -88,7 +92,13 @@ bi-crosscultural-rec/
 
 7. WVS Wave 5 받기: 아래 "데이터" 항목을 보고 직접 받아서 `data/raw/wvs/` 에 넣는다.
 
-8. 데이터 확인 코드 실행 (아직 작성 중)
+8. 데이터 확인 코드 실행 (1분쯤 걸림, 메모리 4GB 정도 씀)
+
+   ```bash
+   python src/check_data.py
+   ```
+
+   결과는 `results/tables/data_check.md`에서 본다.
 
 ## 데이터
 
@@ -98,6 +108,14 @@ bi-crosscultural-rec/
 - 넣는 곳: `data/raw/lastfm/`
 - 내용: 사용자별로 많이 들은 아티스트와 재생 횟수, 사용자 프로필(국가 포함)
 - 2008~2009년쯤 모은 한 시점의 기록이라 "언제 들었는지" 순서 정보는 없다.
+- 압축을 풀면 `data/raw/lastfm/lastfm-dataset-360K/` 안에 tsv 파일 두 개가 생긴다. 파일이 맞는지는 같이 들어있는 README.txt의 MD5 값으로 확인할 수 있다.
+- 나라는 사용자가 프로필에 직접 고른 값이다. "Antarctica"(365명)처럼 실제 거주지로 보기 어려운 값도 있다.
+
+정리 규칙 (`src/load_lastfm.py`)
+- 아티스트 구분: MusicBrainz ID(mbid, 아티스트마다 붙은 고유 번호)가 있으면 그걸 쓰고, 없으면 아티스트 이름을 쓴다. 같은 mbid가 여러 이름 표기로 나오는 경우가 많아서 mbid를 먼저 쓴다.
+- 같은 사용자-아티스트가 두 줄 이상이면 재생 횟수를 합친다.
+- 재생 횟수가 0인 줄은 뺀다.
+- 재생 기록은 있는데 프로필이 없는 사용자 2명은 나라를 몰라서 뺀다.
 - 만든 사람: Òscar Celma
 - 이용 조건: 비상업적 용도만 가능 (Zenodo 라이선스 표기 `other-nc`). 쓸 때 Last.fm 출처를 밝혀야 한다.
 

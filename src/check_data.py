@@ -1,0 +1,163 @@
+"""데이터 확인: 실험에 쓸 만큼 나라와 사용자가 충분한지 숫자로 본다.
+
+실행: python src/check_data.py
+결과: results/tables/ 아래 CSV 파일들과 data_check.md
+"""
+
+import pandas as pd
+
+from config import MIN_USERS_PER_COUNTRY, N_SHOWN_ARTISTS, RAW_WVS_DIR, TABLES_DIR
+from country_codes import country_name_to_iso3
+from load_lastfm import load_plays, load_profiles
+
+# 나라를 몇 명 기준으로 자를지 감을 잡으려고 여러 기준을 한 번에 본다
+USER_COUNT_THRESHOLDS = [50, 100, 200, 500, 1000]
+
+
+def find_wvs_files():
+    # .gitkeep 같은 숨김 파일은 데이터가 아니므로 뺀다
+    return [path for path in RAW_WVS_DIR.iterdir() if not path.name.startswith(".")]
+
+
+def main():
+    TABLES_DIR.mkdir(parents=True, exist_ok=True)
+
+    print("프로필 읽는 중...")
+    profiles = load_profiles()
+    print("재생 기록 읽는 중... (1.6GB라 30초쯤 걸림)")
+    plays = load_plays()
+
+    # ---------- 사용자 단위 표 만들기 ----------
+    artists_per_user = plays.groupby("user_id").size().rename("n_artists")
+    users = profiles.merge(artists_per_user, left_on="user_id", right_index=True, how="inner")
+
+    iso_results = {name: country_name_to_iso3(name) for name in users["country"].unique()}
+    users["iso3"] = users["country"].map(lambda name: iso_results[name][0])
+    users["iso_match"] = users["country"].map(lambda name: iso_results[name][1])
+
+    users_with_country = users[users["country"] != ""]
+    users_with_iso = users_with_country[users_with_country["iso3"].notna()]
+
+    # ---------- 1. 전체 요약 ----------
+    summary = pd.DataFrame(
+        [
+            ("프로필에 있는 사용자", len(profiles)),
+            ("재생 기록이 있는 사용자", plays["user_id"].nunique()),
+            ("프로필과 재생 기록이 둘 다 있는 사용자", len(users)),
+            ("그중 국가 정보가 있는 사용자", len(users_with_country)),
+            ("그중 ISO 나라 코드로 바뀐 사용자", len(users_with_iso)),
+            ("나라 수 (Last.fm 표기 기준)", users_with_country["country"].nunique()),
+            ("아티스트 수 (정리 후)", plays["artist_id"].nunique()),
+            ("사용자-아티스트 쌍 수 (정리 후)", len(plays)),
+            (
+                f"아티스트가 {N_SHOWN_ARTISTS}개 이하라 평가에 못 쓰는 사용자",
+                int((users_with_iso["n_artists"] <= N_SHOWN_ARTISTS).sum()),
+            ),
+        ],
+        columns=["항목", "값"],
+    )
+
+    # ---------- 2. 나라별 사용자 수 ----------
+    country_user_counts = (
+        users_with_country.groupby(["country", "iso3", "iso_match"], dropna=False)
+        .agg(
+            users=("user_id", "size"),
+            median_artists_per_user=("n_artists", "median"),
+        )
+        .reset_index()
+        .sort_values("users", ascending=False)
+    )
+    country_user_counts.to_csv(TABLES_DIR / "country_user_counts.csv", index=False)
+
+    # ---------- 3. 기준 사용자 수별로 남는 나라 수 ----------
+    threshold_rows = []
+    for threshold in USER_COUNT_THRESHOLDS:
+        kept = country_user_counts[country_user_counts["users"] >= threshold]
+        threshold_rows.append((threshold, len(kept), int(kept["users"].sum())))
+    threshold_table = pd.DataFrame(
+        threshold_rows, columns=["최소 사용자 수", "남는 나라 수", "남는 사용자 합"]
+    )
+
+    # ---------- 4. 사용자당 아티스트 수 분포 ----------
+    artist_count_bins = [0, 5, 10, 20, 30, 40, 50, 60, 80, 1000]
+    artist_count_distribution = (
+        pd.cut(users_with_iso["n_artists"], bins=artist_count_bins)
+        .value_counts()
+        .sort_index()
+        .rename_axis("사용자당 아티스트 수 구간")
+        .reset_index(name="사용자 수")
+    )
+    artist_count_distribution["사용자당 아티스트 수 구간"] = artist_count_distribution[
+        "사용자당 아티스트 수 구간"
+    ].astype(str)
+    artist_count_describe = (
+        users_with_iso["n_artists"]
+        .describe(percentiles=[0.05, 0.25, 0.5, 0.75, 0.95])
+        .round(1)
+        .rename_axis("통계")
+        .reset_index(name="값")
+    )
+    artist_count_distribution.to_csv(TABLES_DIR / "artists_per_user_distribution.csv", index=False)
+
+    # ---------- 5. ISO 코드로 못 바꾼 나라 ----------
+    unmatched_countries = country_user_counts[country_user_counts["iso3"].isna()]
+    manual_countries = country_user_counts[country_user_counts["iso_match"] == "manual"]
+
+    # ---------- 6. WVS 연결 ----------
+    # WVS 파일 구조는 아직 확인 전이라, 파일을 직접 열어본 뒤에 연결 코드를 추가한다
+    wvs_files = find_wvs_files()
+    if wvs_files:
+        wvs_section = (
+            "WVS 파일이 있다: "
+            + ", ".join(path.name for path in wvs_files)
+            + "\n\n아직 파일 구조를 확인하지 않아서 연결 코드는 없다. 구조 확인 후 추가한다."
+        )
+    else:
+        wvs_section = "`data/raw/wvs/`에 WVS 파일이 없어서 이 단계는 건너뛰었다."
+
+    # ---------- 결과를 마크다운 한 파일로 ----------
+    main_countries = country_user_counts[country_user_counts["users"] >= MIN_USERS_PER_COUNTRY]
+    report_lines = [
+        "# 데이터 확인 결과",
+        "",
+        "`python src/check_data.py`로 만든 파일. 직접 고치지 말고 코드를 다시 돌린다.",
+        "",
+        "## 1. 전체 요약",
+        summary.to_markdown(index=False),
+        "",
+        "## 2. 사용자당 아티스트 수",
+        "ISO 코드가 있는 사용자 기준.",
+        "",
+        artist_count_describe.to_markdown(index=False),
+        "",
+        artist_count_distribution.to_markdown(index=False),
+        "",
+        "## 3. 최소 사용자 수 기준에 따라 남는 나라",
+        threshold_table.to_markdown(index=False),
+        "",
+        f"## 4. 사용자 {MIN_USERS_PER_COUNTRY}명 이상인 나라 ({len(main_countries)}개)",
+        "전체 목록은 `country_user_counts.csv`.",
+        "",
+        main_countries.to_markdown(index=False),
+        "",
+        "## 5. 나라 이름 맞추기",
+        "### 수동으로 ISO 코드를 지정한 나라",
+        manual_countries.to_markdown(index=False) if len(manual_countries) else "없음",
+        "",
+        "### ISO 코드로 못 바꾼 나라",
+        unmatched_countries.to_markdown(index=False) if len(unmatched_countries) else "없음",
+        "",
+        "## 6. WVS Wave 5와 공통 나라",
+        wvs_section,
+        "",
+    ]
+    report_path = TABLES_DIR / "data_check.md"
+    report_path.write_text("\n".join(report_lines), encoding="utf-8")
+
+    print(summary.to_string(index=False))
+    print(threshold_table.to_string(index=False))
+    print(f"\n저장: {report_path}")
+
+
+if __name__ == "__main__":
+    main()
