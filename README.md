@@ -1,42 +1,23 @@
-# 나라별 인기 아티스트 섞기 실험
+# 새 국가 진출 시 음악 추천의 현지 인기 비중
 
-비즈니스 인텔리전스 중간고사 과제 (교수님 제시 옵션 A: Last.fm + WVS 기반).
+비즈니스 인텔리전스 중간 과제. 공개 데이터로 "한 나라의 사용자 기록이 다른 나라 추천에 도움이 되는가"를 확인하는 과제이고, Last.fm 청취 기록과 WVS 가치관 조사를 함께 썼다.
+
+예를 들어 음악 서비스가 한국에 처음 진출하면, 전 세계 차트 상위 아티스트만 추천해서는 한국에서 인기 있는 국내 아티스트를 놓친다. 반대로 초기 가입자 50명의 기록만 보면 그 몇 명의 취향이 한국 전체 취향처럼 반영된다. 그래서 두 인기를 어떤 비중으로 섞을지, 그 비중을 가치관이 비슷한 나라에서 빌려 올 수 있는지를 실험했다.
 
 ## 세 줄 요약
 
-- 음악 서비스가 새 나라에 막 진출해서 초기 사용자가 조금밖에 없는 상황을 가정한다.
-- 추천 목록에서 "전체 국가 인기 아티스트"와 "그 나라 인기 아티스트"를 어떤 비중으로 섞어야 추천이 잘 맞는지 실험한다.
-- 비중을 나라마다 따로 정하는 게 나은지(H1), 가치관(WVS)이 비슷한 나라의 비중을 빌려 쓰면 나은지(H2)를 확인한다.
+- 추천 점수 = (1 - w) × 전 세계 인기 + w × 현지 인기. 이 w를 어떻게 정할지 비교했다.
+- H1: 나라마다 w를 따로 정하기 / H2: 가치관(WVS)이 비슷한 나라의 w 빌려 쓰기 / H3: 개인 맞춤 추천(CF)에 섞을 때 H2 다시 확인.
+- 결과: 세 가설 모두 모든 나라에 같은 w를 쓰는 방법보다 낫지 않았다. 현지 인기를 섞는 것과 CF는 효과가 컸다(`results/tables/final_summary.md`).
 
-앱을 만드는 과제가 아니라, 공개 데이터로 하는 오프라인 실험이다.
+## 용어
 
-## 지금 진행 상황
-
-- [x] 폴더, 가상환경, 패키지 세팅
-- [x] Last.fm 360K 받기
-- [x] 데이터 확인: Last.fm 쪽 (나라별 사용자 수, 사용자당 아티스트 수)
-- [x] 데이터 확인: WVS와 겹치는 나라 (사용자 100명 이상 기준 48개)
-- [x] 실험 설계 확정 (`report/실험설계.md`)
-- [x] 사용자 나누기와 평가 코드
-- [ ] 모델 실험
-  - [x] H1 검증 단계 (비중 고르기)
-  - [x] H1 시험 단계 (결과: `results/tables/h1_test.md`)
-  - [x] H2 검증 단계 (비중 고르기)
-  - [x] H2 시험 단계 (결과: `results/tables/h2_test.md`)
-  - [x] H3 설정 고르기, ALS 학습, 검증 단계
-  - [x] H3 시험 단계 (결과: `results/tables/h3_test.md`)
-  - [x] 세 가설 요약과 Holm 보정 (`results/tables/final_summary.md`)
-- [ ] 보고서
-
-## 용어 정리
-
-- **인기 아티스트**: 많이 들린 아티스트. 이 프로젝트의 추천 단위는 "곡"이 아니라 "아티스트"다.
-- **섞기**: 전체 인기 점수와 나라 인기 점수를 같은 범위(0~1)로 맞춘 뒤, 정한 비중으로 더하는 것.
-- **협업 필터링**: 나와 취향이 비슷한 사람들이 들은 아티스트를 추천하는 방법. 여기서는 ALS나 BPR 중 하나를 쓴다.
-- **베이스라인**: 비교의 기준이 되는 가장 단순한 방법. 여기서는 "전체 인기 아티스트를 그대로 추천"이다.
-- **Recall@K**: 추천한 K개 안에 사용자가 실제로 들은 아티스트가 얼마나 들어있는지.
-- **NDCG@K**: Recall@K와 비슷한데, 맞힌 아티스트가 목록 위쪽에 있을수록 점수를 더 준다.
-- **WVS (World Values Survey)**: 나라별로 사람들의 가치관을 조사한 설문. 나라끼리 얼마나 비슷한지 재는 데 쓴다.
+- **아티스트**: 추천 단위. 곡이 아니라 아티스트를 추천한다.
+- **비중 w**: 현지 인기를 반영하는 정도(0~1). 0이면 전 세계 인기만, 1이면 현지 인기만 쓴다.
+- **협업 필터링(CF)**: 취향이 비슷한 사람들이 들은 아티스트를 추천하는 방법. 여기서는 ALS를 썼다.
+- **Recall@K**: 추천한 K개 안에 사용자가 실제로 들은 아티스트가 얼마나 들어 있는지.
+- **NDCG@K**: Recall@K와 비슷하지만, 맞힌 아티스트가 목록 위쪽에 있을수록 점수를 더 준다.
+- **WVS (World Values Survey)**: 나라별 가치관 설문. 나라끼리 얼마나 비슷한지 재는 데 썼다.
 
 ## 폴더 구성
 
@@ -73,107 +54,72 @@ Crosscultural/
 ├── results/
 │   ├── tables/         결과 표 (data_check.md에 데이터 확인 결과)
 │   └── figures/        결과 그림
-├── report/             보고서에 넣을 자료 (실험설계.md)
+├── report/             실험 설계와 보고서 정리 자료
 ├── requirements.txt    필요한 파이썬 패키지 목록
-└── AI_사용기록.md       AI로 한 작업 기록 (보고서에 밝혀야 함)
+└── AI_사용기록.md       AI로 한 작업 기록
 ```
 
-## 처음 받은 사람이 할 일
+## 실행 방법
 
-맥/리눅스 터미널 기준이다. 순서대로 복사해서 실행하면 된다.
+맥/리눅스 터미널, 파이썬 3.12 기준.
 
-1. 프로젝트 폴더로 이동
+**1. 환경 준비**
 
-   ```bash
-   cd Crosscultural
-   ```
+```bash
+cd Crosscultural
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-2. 가상환경 만들기 (파이썬 3.12에서 확인함)
+**2. 데이터 넣기**
 
-   ```bash
-   python3 -m venv .venv
-   ```
+Last.fm은 아래 명령으로 받는다(약 543MB). WVS는 아래 "데이터" 항목을 보고 직접 받아 `data/raw/wvs/`에 넣는다.
 
-3. 가상환경 켜기
+```bash
+curl -L -o data/raw/lastfm/lastfm-dataset-360K.tar.gz "https://zenodo.org/api/records/6090214/files/lastfm-dataset-360K.tar.gz/content"
+tar -xzf data/raw/lastfm/lastfm-dataset-360K.tar.gz -C data/raw/lastfm
+```
 
-   ```bash
-   source .venv/bin/activate
-   ```
+**3. 데이터 확인과 사용자 나누기**
 
-4. 패키지 설치
+```bash
+python src/check_data.py    # 결과: results/tables/data_check.md
+python src/split_users.py   # 결과: data/processed/, results/tables/split_counts.md
+```
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+**4. 테스트** (원본 데이터 없이도 돈다)
 
-5. Last.fm 360K 받기 (약 543MB, 시간이 좀 걸림)
+```bash
+python tests/test_metrics.py
+python tests/test_split.py
+python tests/test_popularity.py
+python tests/test_h2.py
+python tests/test_cf.py
+```
 
-   ```bash
-   curl -L -o data/raw/lastfm/lastfm-dataset-360K.tar.gz "https://zenodo.org/api/records/6090214/files/lastfm-dataset-360K.tar.gz/content"
-   ```
+**5. 실험** (각 가설은 검증 단계를 먼저 돌려야 시험 단계가 돈다)
 
-6. 압축 풀기
+```bash
+python src/run_h1.py --stage valid
+python src/run_h1.py --stage test
+python src/run_h2.py --stage valid
+python src/run_h2.py --stage test
+python src/run_h3.py --stage tune
+python src/run_h3.py --stage models
+python src/run_h3.py --stage valid
+python src/run_h3.py --stage test
+python src/summarize_results.py
+```
 
-   ```bash
-   tar -xzf data/raw/lastfm/lastfm-dataset-360K.tar.gz -C data/raw/lastfm
-   ```
+| 단계 | 걸리는 시간 | 메모리 |
+|---|---|---|
+| 데이터 확인 | 약 1분 | 약 4GB |
+| H1 | 단계마다 약 1분 | |
+| H2 검증 | 약 7분 | 약 6GB |
+| H3 | 설정 고르기 6분, ALS 학습 12분, 검증 55분, 시험 3분 | 5~6GB |
 
-7. WVS Wave 5 받기: 아래 "데이터" 항목을 보고 직접 받아서 `data/raw/wvs/` 에 넣는다.
-
-8. 데이터 확인 코드 실행 (1분쯤 걸림, 메모리 4GB 정도 씀)
-
-   ```bash
-   python src/check_data.py
-   ```
-
-   결과는 `results/tables/data_check.md`에서 본다.
-
-9. 사용자 나누기 (20초쯤 걸림)
-
-   ```bash
-   python src/split_users.py
-   ```
-
-   나눈 결과는 `data/processed/`에, 나라별 사용자 수는 `results/tables/split_counts.md`에 생긴다. 시드가 고정되어 있어서 몇 번을 돌려도 같은 결과가 나온다.
-
-10. 테스트 (원본 데이터 없이도 돌아감)
-
-    ```bash
-    python tests/test_metrics.py
-    python tests/test_split.py
-    python tests/test_popularity.py
-    python tests/test_h2.py
-    python tests/test_cf.py
-    ```
-
-11. H1 실험 (각 1분쯤). 검증 단계를 먼저 돌려야 시험 단계가 돈다.
-
-    ```bash
-    python src/run_h1.py --stage valid
-    python src/run_h1.py --stage test
-    ```
-
-12. H2 실험. 검증 단계가 7분쯤 걸리고 메모리를 6GB 정도 쓴다.
-
-    ```bash
-    python src/run_h2.py --stage valid
-    python src/run_h2.py --stage test
-    ```
-
-13. H3 실험. 앞 단계부터 차례로 돌린다. 설정 고르기 6분, ALS 학습 12분, 검증 단계 55분, 시험 단계 3분쯤 걸리고 메모리를 5~6GB 쓴다. ALS 모델은 `data/processed/cf/`에 저장된다.
-
-    ```bash
-    python src/run_h3.py --stage tune
-    python src/run_h3.py --stage models
-    python src/run_h3.py --stage valid
-    python src/run_h3.py --stage test
-    ```
-
-14. 세 가설 요약 (H1~H3 시험 단계를 모두 돌린 뒤)
-
-    ```bash
-    python src/summarize_results.py
-    ```
+시드가 고정되어 있어 다시 돌려도 같은 결과가 나온다. ALS 모델은 `data/processed/cf/`에 저장된다.
 
 ## 데이터
 
@@ -182,7 +128,7 @@ Crosscultural/
 - 받는 곳: https://zenodo.org/records/6090214 (파일 이름 `lastfm-dataset-360K.tar.gz`)
 - 넣는 곳: `data/raw/lastfm/`
 - 내용: 사용자별로 많이 들은 아티스트와 재생 횟수, 사용자 프로필(국가 포함)
-- 2008~2009년쯤 모은 한 시점의 기록이라 "언제 들었는지" 순서 정보는 없다.
+- 2008~2009년에 수집한 한 시점의 기록이라 "언제 들었는지" 순서 정보는 없다.
 - 압축을 풀면 `data/raw/lastfm/lastfm-dataset-360K/` 안에 tsv 파일 두 개가 생긴다. 파일이 맞는지는 같이 들어있는 README.txt의 MD5 값으로 확인할 수 있다.
 - 나라는 사용자가 프로필에 직접 고른 값이다. "Antarctica"(365명)처럼 실제 거주지로 보기 어려운 값 4개(사용자 717명)는 뺀다. 목록은 `src/config.py`의 `EXCLUDED_ISO3`.
 
@@ -194,7 +140,7 @@ Crosscultural/
 - 만든 사람: Òscar Celma
 - 이용 조건: 비상업적 용도만 가능 (Zenodo 라이선스 표기 `other-nc`). 쓸 때 Last.fm 출처를 밝혀야 한다.
 
-### WVS Wave 5 (2005~2009)
+### WVS Wave 5 (조사 연도 2004~2009)
 
 - 받는 곳: https://www.worldvaluessurvey.org (Data & Documentation → Wave 5)
 - 넣는 곳: `data/raw/wvs/`
@@ -202,14 +148,9 @@ Crosscultural/
 - 사이트에서 이름, 소속, 사용 목적을 적고 이용 조건에 동의해야 받을 수 있다.
 - 이용 조건: 비영리 목적만, 데이터 파일 재배포 금지, 결과를 쓸 때 참고문헌에 인용.
 - 파일 형식 (`src/load_wvs.py`): 세미콜론 구분, 쉼표 소수점(예: `,94` = 0.94), 빈칸과 음수(-1~-5)는 결측. V2가 ISO 숫자 나라 코드.
+- 조사 연도는 나라마다 다르다(V260 열 기준 2004~2009년).
 - 인용: Inglehart, R., C. Haerpfer, A. Moreno, C. Welzel, K. Kizilova, J. Diez-Medrano, M. Lagos, P. Norris, E. Ponarin & B. Puranen et al. (eds.). 2018. World Values Survey: Round Five - Country-Pooled Datafile. Madrid, Spain & Vienna, Austria: JD Systems Institute & WVSA Secretariat. doi.org/10.14281/18241.7
 
 ### 재배포 금지
 
 두 데이터 모두 원본을 다른 곳에 다시 올리면 안 된다. 그래서 `data/raw/`, `data/processed/` 안의 파일과 압축 파일은 `.gitignore`로 막아뒀다. 팀원은 각자 위 방법으로 받는다.
-
-## 작업 규칙
-
-- 브랜치 이름: 영어 소문자 단어를 하이픈으로 연결 (예: `data-check`, `popular-mix`, `cf-model`, `wvs-link`, `report`)
-- 커밋 메시지: 한국어로 무엇을 했는지 한 줄 (예: "나라별 사용자 수 확인 코드 추가")
-- 숫자 기준값은 `src/config.py`에서만 바꾼다.
