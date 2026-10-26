@@ -1,4 +1,4 @@
-# 새 국가 진출 시 음악 추천의 현지 인기 비중
+# 과제 설명
 
 비즈니스 인텔리전스 중간 과제. 공개 데이터로 "한 나라의 사용자 기록이 다른 나라 추천에 도움이 되는가"를 확인하는 과제이고, Last.fm 청취 기록과 WVS 가치관 조사를 함께 썼다.
 
@@ -88,7 +88,7 @@ python src/check_data.py    # 결과: results/tables/data_check.md
 python src/split_users.py   # 결과: data/processed/, results/tables/split_counts.md
 ```
 
-**4. 테스트** (원본 데이터 없이도 돈다)
+**4. 테스트** (원본 데이터 없이도 가능)
 
 ```bash
 python tests/test_metrics.py
@@ -98,7 +98,7 @@ python tests/test_h2.py
 python tests/test_cf.py
 ```
 
-**5. 실험** (각 가설은 검증 단계를 먼저 돌려야 시험 단계가 돈다)
+**5. 실험** (각 가설은 검증을 먼저 돌려야 시험할 수 있음)
 
 ```bash
 python src/run_h1.py --stage valid
